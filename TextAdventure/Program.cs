@@ -4,8 +4,32 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        Item myItem = new("Key", "A key for the exit.");
+        Console.Write("Enter your name: ");
+        Player player = new Player(name: Console.ReadLine());
+        Item myItem = new("Key", "A key for the exit.", "It's very rusty and brittle, but you think it'll still work... At least once.");
+        Item myItem2 = new("Sword", "A sword for slashing.", "A little dull, a little rusty.");
+        player.PickUpItem(myItem);
+        player.PickUpItem(myItem2);
 
-        Console.WriteLine(myItem.Name + ": " + myItem.Description);
+        foreach (Item item in player.Inventory)
+        {
+            Console.WriteLine(item.Name + ": " + item.Description + "\n" + item.DetailedDescription);
+        }
+
+        while (true)
+        {
+            string userInput = Console.ReadLine();
+            Item lookedItem;
+            if (userInput.ToLower() =="q") { break; }
+            else if (userInput == "") { continue; }
+            else if((lookedItem = player.Inventory.FirstOrDefault(i => i.Name.ToLower() == userInput.ToLower()))!=null)
+            {
+                Console.WriteLine("You look at " + lookedItem.Name + "... " + lookedItem.DetailedDescription);
+            }
+            else
+            {
+                Console.WriteLine("I don't know what you mean by that.");
+            }
+        }
     }
 }

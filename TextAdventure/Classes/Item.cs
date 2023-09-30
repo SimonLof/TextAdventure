@@ -4,13 +4,23 @@
     {
         public string Name { get; set; }
         public int Id { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public string  DetailedDescription { get; set; } = string.Empty;
+        private static int _idCount = 0;
 
-        public Item(string name,  string description)
+        public Item(string name,  string description, string detailed)
         {
             Name = name;
-            Id = 0;
+            Id = _idCount;
+            _idCount++;
             Description = description;
+            DetailedDescription = detailed;
+        }
+
+        public virtual bool UseItem(Item item)
+        {
+            if (item == null) return false;
+            return true;
         }
     }
 }
