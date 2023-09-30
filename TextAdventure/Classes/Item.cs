@@ -1,26 +1,19 @@
 ﻿namespace TextAdventure.Classes
 {
-    public class Item
+    public class Item : BaseObject
     {
-        public string Name { get; set; }
-        public int Id { get; set; }
-        public string Description { get; set; } = string.Empty;
-        public string  DetailedDescription { get; set; } = string.Empty;
-        private static int _idCount = 0;
+        public List<Item> CanBeUsedWith { get; set; }
 
-        public Item(string name,  string description, string detailed)
+        public Item(string name, string description, string detailedDescription, List<Item> canBeUsedWith)
         {
-            Name = name;
-            Id = _idCount;
-            _idCount++;
-            Description = description;
-            DetailedDescription = detailed;
+            this.Name = name;
+            this.Description = description;
+            this.DetailedDescription = detailedDescription;
+            this.CanBeUsedWith = canBeUsedWith;
         }
 
-        public virtual bool UseItem(Item item)
-        {
-            if (item == null) return false;
-            return true;
-        }
+        public void ThisHappensWhenUsed() { }
+
+        public void ThisHappensWhenUsedOn() { }
     }
 }

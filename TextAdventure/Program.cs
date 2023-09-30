@@ -5,9 +5,9 @@ internal class Program
     private static void Main(string[] args)
     {
         Console.Write("Enter your name: ");
-        Player player = new Player(name: Console.ReadLine());
-        Item myItem = new("Key", "A key for the exit.", "It's very rusty and brittle, but you think it'll still work... At least once.");
-        Item myItem2 = new("Sword", "A sword for slashing.", "A little dull, a little rusty.");
+        Player player = new(name: Console.ReadLine());
+        Item myItem = new("Key", "Old rusty key", "You think it might open the exit door...",new List<Item>() );
+        Item myItem2 = new("Sword", "A sword for slashing.", "A little dull, a little rusty.",new List<Item>() );
         player.PickUpItem(myItem);
         player.PickUpItem(myItem2);
 
