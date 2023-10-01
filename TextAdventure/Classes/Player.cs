@@ -11,7 +11,7 @@
         {
             Name = name;
             Inventory = new List<Item>();
-            Coords = new Coordinates(0,0);
+            Coords = new Coordinates(0, 0);
         }
         public Player(string name, Coordinates coords)
         {
@@ -19,7 +19,7 @@
             Inventory = new List<Item>();
             Coords = coords;
         }
-        public Player(string name, int x, int y) 
+        public Player(string name, int x, int y)
         {
             Name = name;
             Inventory = new List<Item>();
@@ -29,9 +29,9 @@
         {
             Inventory.Add(item);
         }
-        public void DropItem(Item item) 
-        {  
-            Inventory.Remove(item); 
+        public void DropItem(Item item)
+        {
+            Inventory.Remove(item);
         }
     }
 }

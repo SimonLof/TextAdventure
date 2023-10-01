@@ -1,6 +1,6 @@
 ﻿namespace TextAdventure.Classes
 {
-    public class RoomEvent:BaseObject
+    public class RoomEvent : BaseObject
     {
         public RoomEvent(string name, string description)
         {

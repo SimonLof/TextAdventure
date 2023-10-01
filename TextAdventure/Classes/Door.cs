@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TextAdventure.Classes
+﻿namespace TextAdventure.Classes
 {
     public enum Facing
     {
@@ -13,7 +7,7 @@ namespace TextAdventure.Classes
         South,
         East
     }
-    public class Door:BaseObject
+    public class Door : BaseObject
     {
         public Facing Direction { get; set; }
         public bool Locked { get; set; }

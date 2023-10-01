@@ -2,11 +2,11 @@
 {
     public class Map
     {
-        public Dictionary<Coordinates,Room> MapLayout { get; set; }
+        public Dictionary<Coordinates, Room> MapLayout { get; set; }
 
-        public Map() 
+        public Map()
         {
-            MapLayout = new Dictionary<Coordinates,Room>();
+            MapLayout = new Dictionary<Coordinates, Room>();
         }
         public Room GetRoomFromCoords(Coordinates coords)
         {
@@ -17,7 +17,7 @@
         {
             // If there is already a room at gives coordinates, returns false
             // Otherwise adds the room to the coordinates and returns true
-            if (MapLayout.Any(o=>o.Key == coords))
+            if (MapLayout.Any(o => o.Key == coords))
             {
                 return false;
             }
