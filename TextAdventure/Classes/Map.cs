@@ -10,7 +10,7 @@
         }
         public Room GetRoomFromCoords(Coordinates coords)
         {
-            return MapLayout[coords];
+            return MapLayout.Where(c => c.Key.X == coords.X && c.Key.Y == coords.Y).SingleOrDefault().Value;
         }
 
         public bool AddRoom(Coordinates coords, Room room)

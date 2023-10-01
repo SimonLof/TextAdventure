@@ -11,9 +11,17 @@
             this.DetailedDescription = detailedDescription;
             this.CanBeUsedWith = canBeUsedWith;
         }
+        public Item(string name, string description, string detailedDescription)
+        {
+            // Constructor for adding interactions after instansiation
+            this.Name = name;
+            this.Description = description;
+            this.DetailedDescription = detailedDescription;
+            this.CanBeUsedWith = new();
+        }
 
-        public void ThisHappensWhenUsed() { }
+        public virtual void ThisHappensWhenUsed() { }
 
-        public void ThisHappensWhenUsedOn() { }
+        public virtual void ThisHappensWhenUsedOn() { }
     }
 }

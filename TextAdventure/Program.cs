@@ -4,33 +4,44 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        // Set up ------- make breakout method for setup
         // Just experimental stuff that should be replaced.
+        bool running = true;
         Console.Write("Enter your name: ");
         Player player = new(name: Console.ReadLine());
         Item myItem = new("Key", "Old rusty key", "You think it might open the exit door...", new List<Item>());
         Item myItem2 = new("Sword", "A sword for slashing.", "A little dull, a little rusty.", new List<Item>());
-        player.PickUpItem(myItem);
-        player.PickUpItem(myItem2);
-
-        foreach (Item item in player.Inventory)
+        List<Item> items = new()
         {
-            Console.WriteLine(item.Name + ": " + item.Description + "\n" + item.DetailedDescription);
-        }
-
-        while (true)
+            myItem,
+            myItem2
+        };
+        Door door = new("Wooden door", "It's made of wood.", false, Facing.South);
+        List<Door> doors = new()
         {
-            // All experimental stuff that should be replaced with methods.
+            door
+        };
+        RoomEvent roomEvent = new("Nothing.", "Nothing special here.");
+
+        Map map = new();
+        Room room = new("Starting room", "A dark cellar.", "Reaks of fish and cheese.", items, roomEvent, doors);
+        map.AddRoom(new(0, 0), room);
+
+
+        // Main loop
+        while (running)
+        {
+            // Input handler starting to work out!
             string userInput = Console.ReadLine();
-            Item lookedItem;
-            if (userInput.ToLower() == "q") { break; }
-            else if (userInput == "") { continue; }
-            else if ((lookedItem = player.Inventory.FirstOrDefault(i => i.Name.ToLower() == userInput.ToLower())) != null)
+            if (userInput == null || userInput == ""){ continue; }
+            try
             {
-                Console.WriteLine("You look at " + lookedItem.Name + "... " + lookedItem.DetailedDescription);
+                InputHandler.GetOutcome(userInput, ref player, ref map, ref running);
+
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("I don't know what you mean by that.");
+                Console.WriteLine("I don't know what you mean by that...");
             }
         }
     }
