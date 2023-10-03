@@ -5,6 +5,7 @@ namespace TextAdventure.Classes
 {
     public static class InputHandler
     {
+        #region FirstOutcomeHandler
         public static void GetOutcome(string inputString, ref Player player, ref Map map, ref bool running)
         {
             if (inputString.ToLower().Trim() == "q")
@@ -12,7 +13,9 @@ namespace TextAdventure.Classes
                 while (true)
                 {
                     Console.Write("Are you sure? (y/n)");
-                    string quitQuestion = Console.ReadLine().ToLower().Trim();
+                    string quitQuestion;
+                    try { quitQuestion = Console.ReadLine().ToLower().Trim(); }
+                    catch { continue; }
                     if (quitQuestion == "y")
                     {
                         running = false;
@@ -87,7 +90,7 @@ namespace TextAdventure.Classes
             else if (inputString.ToLower()[..4] == "get " || inputString.ToLower()[..8] == "pick up ")
             {
                 Room room = map.GetRoomFromCoords(player.Coords);
-                Item getItem = room.Items.SingleOrDefault(i => i.Name.ToLower().Trim().Contains(inputString.ToLower().Trim()[4..]));
+                Item? getItem = room.Items.SingleOrDefault(i => i.Name.ToLower().Trim().Contains(inputString.ToLower().Trim()[4..]));
                 if (getItem != null)
                 {
                     player.Inventory.Add(getItem);
@@ -101,9 +104,11 @@ namespace TextAdventure.Classes
             else
                 throw new Exception();
         }
+        #endregion
         private static bool CheckDirection(Coordinates coords, Map map, Player player, Facing facing)
         {
             // Check that the map has a room with the new coordinates and that there's a door towards it in the current room.
+            // Remove map check and do a only a door facing check? Map logic should guarantee doors lead to rooms.
             if (map.MapLayout.ContainsKey(coords) &&
                 map.MapLayout[player.Coords].Doors.Any(d => d.Direction == facing))
             {
@@ -111,5 +116,117 @@ namespace TextAdventure.Classes
             }
             return false;
         }
+        #region new input handler with .split(' ')
+        // New version of inputhandling
+        public static void GetOutcomeTest(string inputString, ref Player player, ref Map map, ref bool running)
+        {
+            List<string> inputCommands = inputString.Split(' ').ToList();
+            int numberOfCommands = inputCommands.Count;
+            switch (inputCommands[0].ToLower())
+            {
+                case "q":
+                    running = false;
+                    break;
+                case "go":
+                    if (numberOfCommands > 1)
+                    {
+                        switch (inputCommands[1].ToLower())
+                        {
+                            case "north": // Need method for checking door direction.
+                                          // Skip room direction check?
+                                          // If there's a door => should always be a room. Guaranteed by map create logic.
+                                Console.WriteLine(map.GetRoomFromCoords(player.Coords).Doors.Any(d => d.Direction == Facing.North) ?
+                                    map.GetRoomFromCoords(player.Coords).Doors.SingleOrDefault(d => d.Direction == Facing.North)?.Name :
+                                    "No door that way.");
+                                break;
+                            case "east":
+                                break;
+                            case "south":
+                                break;
+                            case "west":
+                                break;
+                            default:
+                                Console.WriteLine($"Can't go {inputCommands[1]}.");
+                                break;
+                        }
+                    }
+                    else
+                        Console.WriteLine("Go where?");
+                    break;
+                case "pick":
+                    if (inputCommands.Count > 1)
+                    {
+                        switch (inputCommands[1].ToLower())
+                        {
+                            case "up":
+                                if (inputCommands.Count > 2)
+                                {
+                                    List<Item> roomItems = map.GetRoomFromCoords(player.Coords).Items;
+                                    if (roomItems.Count > 0)
+                                    {
+                                        bool itemFound = false;
+                                        foreach (Item item in roomItems)
+                                        {
+                                            if (item.Name.ToLower() == inputCommands[2].ToLower())
+                                            {
+                                                player.PickUpItem(item);
+                                                map.GetRoomFromCoords(player.Coords).Items.Remove(item);
+                                                Console.WriteLine($"You picked up {item.Name}.");
+                                                itemFound = true;
+                                                break;
+                                            }
+                                        }
+                                        if (!itemFound)
+                                            Console.WriteLine($"No item named {inputCommands[2]} in this room.");
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Pick up what?");
+                                }
+                                break;
+                            case "nose":
+                                Console.WriteLine("Gross.");
+                                break;
+                            case "ass":
+                                Console.WriteLine("You like it.");
+                                break;
+                            case "bellybutton":
+                                Console.WriteLine("A sense of serenity washes over you...");
+                                break;
+                            default:
+                                Console.WriteLine("Pick what?");
+                                break;
+                        }
+                    }
+                    else
+                        Console.WriteLine("Pick what?");
+                    break;
+                case "bag":
+                    if (player.Inventory.Count > 0)
+                    {
+                        foreach (Item item in player.Inventory)
+                            Console.WriteLine(item.Name + ": " + item.Description);
+                    }
+                    else
+                        Console.WriteLine("You bag is empty.");
+                    break;
+                case "look":
+                    if (numberOfCommands > 1)
+                    {
+                        if (inputCommands[1].ToLower() == "around")
+                        {
+                            foreach (Item item in map.GetRoomFromCoords(player.Coords).Items)
+                            {
+                                Console.WriteLine(item.Name + ": " + item.Description);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    throw new Exception("I don't know what you mean by that...");
+            }
+        }
+        #endregion
     }
 }

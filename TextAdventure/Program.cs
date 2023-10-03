@@ -4,7 +4,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        // Set up ------- make breakout method for setup
+        // Set up ------- make breakout method for setup and setup from textfiles
         // Just experimental stuff that should be replaced.
         bool running = true;
         Console.Write("Enter your name: ");
@@ -24,24 +24,27 @@ internal class Program
         RoomEvent roomEvent = new("Nothing.", "Nothing special here.");
 
         Map map = new();
-        Room room = new("Starting room", "A dark cellar.", "Reaks of fish and cheese.", items, roomEvent, doors);
+        Room room = new("Starting room", "A dark cellar.", "Reeks of fish and cheese.", items, roomEvent, doors);
         map.AddRoom(new(0, 0), room);
 
+        // Make a 'visited' prop in room and list all visited rooms and coords when looking at "map"?
+        // Or try to draw a map OMEGALUL
 
         // Main loop
         while (running)
         {
+            Console.WriteLine(map.GetRoomFromCoords(player.Coords).Description);
             // Input handler starting to work out!
             string userInput = Console.ReadLine();
-            if (userInput == null || userInput == ""){ continue; }
+            if (userInput == null || userInput == "") { continue; }
             try
             {
-                InputHandler.GetOutcome(userInput, ref player, ref map, ref running);
+                InputHandler.GetOutcomeTest(userInput, ref player, ref map, ref running);
 
             }
             catch (Exception ex)
             {
-                Console.WriteLine("I don't know what you mean by that...");
+                Console.WriteLine(ex.Message);
             }
         }
     }

@@ -17,7 +17,7 @@
         {
             // If there is already a room at gives coordinates, returns false
             // Otherwise adds the room to the coordinates and returns true
-            if (MapLayout.Any(o => o.Key == coords))
+            if (MapLayout.Any(o => o.Key.X == coords.X && o.Key.Y == coords.Y))
             {
                 return false;
             }

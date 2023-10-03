@@ -6,7 +6,7 @@
 
         public Item(string name, string description, string detailedDescription, List<Item> canBeUsedWith)
         {
-            this.Name = name;
+            Name = name;
             this.Description = description;
             this.DetailedDescription = detailedDescription;
             this.CanBeUsedWith = canBeUsedWith;
