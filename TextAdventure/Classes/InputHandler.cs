@@ -125,7 +125,13 @@ namespace TextAdventure.Classes
             switch (inputCommands[0].ToLower())
             {
                 case "q":
-                    running = false;
+                    Console.Write("Are you sure?(y/n) ");
+                    if (Console.ReadLine().ToString().ToLower().Trim() == "y")
+                    {
+                        running = false;
+                    }
+                    else
+                        Console.WriteLine("Aborted quit.");
                     break;
                 case "go":
                     if (numberOfCommands > 1)
@@ -135,15 +141,16 @@ namespace TextAdventure.Classes
                             case "north": // Need method for checking door direction.
                                           // Skip room direction check?
                                           // If there's a door => should always be a room. Guaranteed by map create logic.
-                                Console.WriteLine(map.GetRoomFromCoords(player.Coords).Doors.Any(d => d.Direction == Facing.North) ?
-                                    map.GetRoomFromCoords(player.Coords).Doors.SingleOrDefault(d => d.Direction == Facing.North)?.Name :
-                                    "No door that way.");
+                                LookForTheDoor(player, map, Facing.North);
                                 break;
                             case "east":
+                                LookForTheDoor(player, map, Facing.East);
                                 break;
                             case "south":
+                                LookForTheDoor(player, map, Facing.South);
                                 break;
                             case "west":
+                                LookForTheDoor(player, map, Facing.West);
                                 break;
                             default:
                                 Console.WriteLine($"Can't go {inputCommands[1]}.");
@@ -216,15 +223,41 @@ namespace TextAdventure.Classes
                     {
                         if (inputCommands[1].ToLower() == "around")
                         {
-                            foreach (Item item in map.GetRoomFromCoords(player.Coords).Items)
+                            Item[] items = map.GetRoomFromCoords(player.Coords).Items.ToArray();
+                            if (items.Length > 0)
                             {
-                                Console.WriteLine(item.Name + ": " + item.Description);
+                                foreach (Item item in items)
+                                {
+                                    Console.WriteLine(item.Name + ": " + item.Description);
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("No items in this room.");
                             }
                         }
                     }
                     break;
                 default:
                     throw new Exception("I don't know what you mean by that...");
+            }
+        }
+
+        private static bool LookForTheDoor(Player player, Map map, Facing facing)
+        {
+            if (map.GetRoomFromCoords(player.Coords).Doors.Any(d => d.Direction == facing))
+            {
+                Console.WriteLine(map.GetRoomFromCoords(player.Coords).Doors.SingleOrDefault(d => d.Direction == facing)?.Name);
+                if (facing == Facing.North) player.Coords.Y += 1;
+                if (facing == Facing.South) player.Coords.Y -= 1;
+                if (facing == Facing.East) player.Coords.X += 1;
+                if (facing == Facing.West) player.Coords.X -= 1;
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("No door that way.");
+                return false;
             }
         }
         #endregion
