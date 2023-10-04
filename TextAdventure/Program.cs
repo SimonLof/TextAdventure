@@ -46,7 +46,7 @@ internal class Program
             if (userInput == null || userInput == "") { continue; }
             try
             {
-                InputHandler.GetOutcomeTest(userInput, ref player, ref map, ref running);
+                InputHandler.GetOutcome(userInput, ref player, ref map, ref running);
 
             }
             catch (Exception ex)
