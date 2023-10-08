@@ -2,7 +2,11 @@
 {
     public class Item : BaseObject
     {
+        public static List<Item> AllItems { get; set; } = new List<Item>();
+        private static int _id = 0;
+
         public List<Item> CanBeUsedWith { get; set; }
+        public int Id { get; set; }
 
         public Item(string name, string description, string detailedDescription)
         {
@@ -10,6 +14,9 @@
             this.Description = description;
             this.DetailedDescription = detailedDescription;
             this.CanBeUsedWith = new();
+            Id = _id;
+            _id++;
+            AllItems.Add(this);
         }
         public Item(string name, string description, string detailedDescription, List<Item> canBeUsedWith)
         {
@@ -17,6 +24,9 @@
             this.Description = description;
             this.DetailedDescription = detailedDescription;
             this.CanBeUsedWith = canBeUsedWith;
+            Id = _id;
+            _id++;
+            AllItems.Add(this);
         }
 
 
