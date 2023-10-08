@@ -4,31 +4,53 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        // Set up ------- make breakout method for setup and setup from textfiles
+        // Just experimental stuff that should be replaced.
+        bool running = true;
         Console.Write("Enter your name: ");
-        Player player = new Player(name: Console.ReadLine());
-        Item myItem = new("Key", "A key for the exit.", "It's very rusty and brittle, but you think it'll still work... At least once.");
-        Item myItem2 = new("Sword", "A sword for slashing.", "A little dull, a little rusty.");
-        player.PickUpItem(myItem);
-        player.PickUpItem(myItem2);
-
-        foreach (Item item in player.Inventory)
+        Player player = new(name: Console.ReadLine());
+        List<Item> allItems = new List<Item>();
+        using (StreamReader sr = new StreamReader(@".\items.txt"))
         {
-            Console.WriteLine(item.Name + ": " + item.Description + "\n" + item.DetailedDescription);
-        }
-
-        while (true)
-        {
-            string userInput = Console.ReadLine();
-            Item lookedItem;
-            if (userInput.ToLower() =="q") { break; }
-            else if (userInput == "") { continue; }
-            else if((lookedItem = player.Inventory.FirstOrDefault(i => i.Name.ToLower() == userInput.ToLower()))!=null)
+            while(!sr.EndOfStream)
             {
-                Console.WriteLine("You look at " + lookedItem.Name + "... " + lookedItem.DetailedDescription);
+                string[] itemStrings = sr.ReadLine().Split(',');
+                allItems.Add(new(itemStrings[0], itemStrings[1], itemStrings[2], new List<Item>()));
             }
-            else
+        }
+        Room otherRoom = new("Kitchen", "A damp kitchen full of mold and cockroaches.",
+            "Upon further inspection you notice the cockroaches have made a small society in one of the cabins... They seem happy.", new List<Item>());
+        Door door = new("Wooden door", "It's made of wood.", false, Facing.South, otherRoom);
+        List<Door> doors = new()
+        {
+            door
+        };
+        Room room = new("Starting room", "A dark cellar.", "Reeks of fish and cheese.", allItems);
+        room.AddDoors(doors);
+        Map map = new(room);
+
+        // Make a 'visited' prop in room and list all visited rooms and coords when looking at "map"?
+        // Or try to draw a map OMEGALUL
+        bool firstLook = true;
+        // Main loop
+        while (running)
+        {
+            if (firstLook)
             {
-                Console.WriteLine("I don't know what you mean by that.");
+                Console.WriteLine(map.CurrentRoom.Description);
+                firstLook = false;
+            }
+            // Input handler starting to work out!
+            string userInput = Console.ReadLine();
+            if (userInput == null || userInput == "") { continue; }
+            try
+            {
+                InputHandler.GetOutcome(userInput, ref player, ref map, ref running);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
         }
     }
