@@ -2,22 +2,34 @@
 {
     public class Room : BaseObject
     {
-        public List<Item> Items { get; set; }
-        public List<Door> Doors { get; set; }
-
+        public List<int> ItemsById { get; set; }
+        public List<Door> Doors { get; set; } = new List<Door>();
         public Room(string name, string description, string detailedDescription,
-                    List<Item> items)
+                    List<int> items)
         {
             Name = name;
             Description = description;
             DetailedDescription = detailedDescription;
-            Items = items;
-            Doors = new List<Door>();
+            ItemsById = items;
         }
 
         public void AddDoors(List<Door> doors)
         {
             Doors = doors;
+        }
+
+        public List<Item> GetItemsInRoom()
+        {
+            List<Item> items = Item.AllItems;
+            List<Item> result = new();
+            foreach (Item item in items)
+            {
+                if (ItemsById.Contains(item.Id))
+                {
+                    result.Add(item);
+                }
+            }
+            return result;
         }
     }
 }

@@ -5,10 +5,9 @@
         public List<Room> MapLayout { get; set; }
         public Room CurrentRoom { get; set; }
 
-        public Map(Room startingRoom)
+        public Map()
         {
             MapLayout = new List<Room>();
-            CurrentRoom = startingRoom;
         }
         public Room GetCurrentRoom()
         {

@@ -6,6 +6,10 @@
         // New version of inputhandling
         public static void GetOutcome(string inputString, ref Player player, ref Map map, ref bool running)
         {
+            while(inputString.Contains("  "))
+            {
+                inputString = inputString.Replace("  ", " ");
+            }
             List<string> inputCommands = inputString.Split(' ').ToList();
             int numberOfCommands = inputCommands.Count;
             switch (inputCommands[0].ToLower())
@@ -24,9 +28,7 @@
                     {
                         switch (inputCommands[1].ToLower())
                         {
-                            case "north": // Need method for checking door direction.
-                                          // Skip room direction check?
-                                          // If there's a door => should always be a room. Guaranteed by map create logic.
+                            case "north":
                                 LookForTheDoor(player, map, Facing.North);
                                 break;
                             case "east":
@@ -54,7 +56,8 @@
                             case "up":
                                 if (inputCommands.Count > 2)
                                 {
-                                    List<Item> roomItems = map.CurrentRoom.Items;
+                                    int[] itemIds = map.CurrentRoom.ItemsById.ToArray();
+                                    List<Item> roomItems = Item.AllItems.Where(i => itemIds.Contains(i.Id)).ToList();
                                     if (roomItems.Count > 0)
                                     {
                                         bool itemFound = false;
@@ -63,7 +66,7 @@
                                             if (item.Name.ToLower() == inputCommands[2].ToLower())
                                             {
                                                 player.PickUpItem(item);
-                                                map.CurrentRoom.Items.Remove(item);
+                                                map.CurrentRoom.ItemsById.Remove(item.Id);
                                                 Console.WriteLine($"You picked up {item.Name}.");
                                                 itemFound = true;
                                                 break;
@@ -109,9 +112,16 @@
                     {
                         if (inputCommands[1].ToLower() == "around")
                         {
-                            Item[] items = map.CurrentRoom.Items.ToArray();
-                            if (items.Length > 0)
+                            Console.WriteLine("You see...");
+                            foreach (Door door in map.CurrentRoom.Doors)
                             {
+                                Console.WriteLine("A door facing " + door.Direction.ToString());
+                            }
+                            Console.WriteLine(map.CurrentRoom.DetailedDescription);
+                            List<Item> items = map.CurrentRoom.GetItemsInRoom();
+                            if (items.Count > 0)
+                            {
+                                Console.WriteLine("You also see some items...");
                                 foreach (Item item in items)
                                 {
                                     Console.WriteLine(item.Name + ": " + item.Description);
@@ -120,6 +130,23 @@
                             else
                             {
                                 Console.WriteLine("No items in this room.");
+                            }
+                        }
+                        else if (inputCommands[1].ToLower() == "at")
+                        {
+                            if (inputCommands.Count > 2)
+                            {
+                                int[] itemIds = map.CurrentRoom.ItemsById.ToArray();
+                                BaseObject lookingAt = player.Inventory.SingleOrDefault(i => i.Name.ToLower().Equals(inputCommands[2].ToLower())) ??
+                                                       map.CurrentRoom.GetItemsInRoom().SingleOrDefault(i => i.Name.ToLower().Equals(inputCommands[2].ToLower()));
+                                if (lookingAt == null)
+                                { lookingAt = map.CurrentRoom.Doors.SingleOrDefault(d => d.Name.ToLower() == inputCommands[2].ToLower()); }
+                                if (lookingAt == null)
+                                { lookingAt = "room" == inputCommands[2].ToLower() ? map.CurrentRoom : null; }
+                                if (lookingAt == null)
+                                { Console.WriteLine("Nothing here named " + inputCommands[2]); }
+                                else
+                                { Console.WriteLine(lookingAt.Name + ": " + lookingAt.DetailedDescription); }
                             }
                         }
                     }
