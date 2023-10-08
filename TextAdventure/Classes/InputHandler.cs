@@ -5,7 +5,7 @@
         #region input handler using .split(' ')
         public static void GetOutcome(string inputString, ref Player player, ref Map map, ref bool running)
         {
-            while(inputString.Contains("  "))
+            while (inputString.Contains("  "))
             {
                 inputString = inputString.Replace("  ", " ");
             }
@@ -28,16 +28,16 @@
                         switch (inputCommands[1].ToLower())
                         {
                             case "north":
-                                LookForTheDoor(player, map, Facing.North);
+                                LookForTheDoor(map, Facing.North);
                                 break;
                             case "east":
-                                LookForTheDoor(player, map, Facing.East);
+                                LookForTheDoor(map, Facing.East);
                                 break;
                             case "south":
-                                LookForTheDoor(player, map, Facing.South);
+                                LookForTheDoor(map, Facing.South);
                                 break;
                             case "west":
-                                LookForTheDoor(player, map, Facing.West);
+                                LookForTheDoor(map, Facing.West);
                                 break;
                             default:
                                 Console.WriteLine($"Can't go {inputCommands[1]}.");
@@ -123,7 +123,7 @@
                                 Console.WriteLine("You also see some items...");
                                 foreach (Item item in items)
                                 {
-                                    Console.WriteLine(item.Name + ": " + item.Description);
+                                    Console.WriteLine(item.Name + " - " + item.Description);
                                 }
                             }
                             else
@@ -154,13 +154,21 @@
                     throw new Exception("I don't know what you mean by that...");
             }
         }
-        private static bool LookForTheDoor(Player player, Map map, Facing facing)
+        private static bool LookForTheDoor(Map map, Facing facing)
         {
             if (map.CurrentRoom.Doors.Any(d => d.Direction == facing))
             {
-                map.CurrentRoom = map.CurrentRoom.Doors.Where(d => d.Direction == facing).SingleOrDefault().LeadsToo;
-                Console.WriteLine(map.CurrentRoom.Description);
-                return true;
+                if (!map.CurrentRoom.Doors.Where(d => d.Direction == facing).SingleOrDefault().Locked)
+                {
+                    map.CurrentRoom = map.CurrentRoom.Doors.Where(d => d.Direction == facing).SingleOrDefault().LeadsToo;
+                    Console.WriteLine(map.CurrentRoom.Description);
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("The door is locked!");
+                    return false;
+                }
             }
             else
             {

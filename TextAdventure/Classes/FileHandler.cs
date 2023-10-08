@@ -4,9 +4,9 @@
     {
         private static string RoomsFilePath = ".\\rooms.txt";
         private static string ItemsFilePath = ".\\items.txt";
-        private static string MapFilePath = ".\\map.txt";
-        private static StreamReader reader;
-        private static StreamWriter writer;
+        private static string MapFilePath = ".\\map.txt"; // Save current map to continue playing? Later project
+        private static StreamReader? reader;
+        private static StreamWriter? writer;
 
         public static List<Room> GetRooms()
         {
@@ -27,14 +27,21 @@
         public static List<Item> GetAllItems()
         {
             List<Item> items = new();
-            using (reader = new(ItemsFilePath))
+            try
             {
-                while (!reader.EndOfStream)
+                using (reader = new(ItemsFilePath))
                 {
-                    string[] line = reader.ReadLine().Split(',');
-                    Item item = new(line[0], line[1], line[2]);
-                    items.Add(item);
+                    while (!reader.EndOfStream)
+                    {
+                        string[] line = reader.ReadLine().Split(',');
+                        Item item = new(line[0], line[1], line[2]);
+                        items.Add(item);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             return items;
         }
