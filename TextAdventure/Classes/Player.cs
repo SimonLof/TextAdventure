@@ -11,11 +11,6 @@
             Name = name;
             Inventory = new List<Item>();
         }
-        public Player(string name, int x, int y)
-        {
-            Name = name;
-            Inventory = new List<Item>();
-        }
         public void PickUpItem(Item item)
         {
             Inventory.Add(item);

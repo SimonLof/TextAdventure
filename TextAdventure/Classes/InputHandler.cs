@@ -24,9 +24,7 @@
                     {
                         switch (inputCommands[1].ToLower())
                         {
-                            case "north": // Need method for checking door direction.
-                                          // Skip room direction check?
-                                          // If there's a door => should always be a room. Guaranteed by map create logic.
+                            case "north":
                                 LookForTheDoor(player, map, Facing.North);
                                 break;
                             case "east":
@@ -109,17 +107,47 @@
                     {
                         if (inputCommands[1].ToLower() == "around")
                         {
+                            Console.WriteLine("You see...");
+                            Thread.Sleep(1000);
+                            foreach (Door door in map.CurrentRoom.Doors)
+                            {
+                                Console.WriteLine("A door facing " + door.Direction.ToString());
+                            }
+                            Thread.Sleep(1000);
+                            Console.WriteLine(map.CurrentRoom.DetailedDescription);
                             Item[] items = map.CurrentRoom.Items.ToArray();
+                            Thread.Sleep(1000);
                             if (items.Length > 0)
                             {
+                                Console.WriteLine("You also see some items...");
+                                Thread.Sleep(1000);
                                 foreach (Item item in items)
                                 {
                                     Console.WriteLine(item.Name + ": " + item.Description);
+                                    Thread.Sleep(300);
                                 }
                             }
                             else
                             {
                                 Console.WriteLine("No items in this room.");
+                            }
+                        }
+                        else if (inputCommands[1].ToLower() == "at")
+                        {
+                            if (inputCommands.Count > 2)
+                            {
+                                BaseObject lookingAt = player.Inventory.SingleOrDefault(i => i.Name.ToLower().Equals(inputCommands[2].ToLower()));
+                                if (lookingAt == null)
+                                { lookingAt = map.CurrentRoom.Items.SingleOrDefault(i => i.Name.ToLower().Equals(inputCommands[2].ToLower())); }
+                                if (lookingAt == null)
+                                { lookingAt = map.CurrentRoom.Doors.SingleOrDefault(d => d.Name.ToLower() == inputCommands[2].ToLower()); }
+                                if (lookingAt == null)
+                                { lookingAt = "room" == inputCommands[2].ToLower() ? map.CurrentRoom : null; }
+                                if (lookingAt == null)
+                                { Console.WriteLine("Nothing here named " + inputCommands[2]); }
+                                else
+                                { Console.WriteLine(lookingAt.Name + ": " + lookingAt.DetailedDescription); }
+
                             }
                         }
                     }
