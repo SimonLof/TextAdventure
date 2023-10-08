@@ -18,6 +18,7 @@
             _id++;
             AllItems.Add(this);
         }
+        // New class that just lists interactions?
         public Item(string name, string description, string detailedDescription, List<Item> canBeUsedWith)
         {
             Name = name;
@@ -28,10 +29,5 @@
             _id++;
             AllItems.Add(this);
         }
-
-
-        public virtual void ThisHappensWhenUsed() { }
-
-        public virtual void ThisHappensWhenUsedOn() { }
     }
 }

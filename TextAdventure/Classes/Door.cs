@@ -13,13 +13,13 @@
         public bool Locked { get; set; }
         public Room LeadsToo { get; set; }
 
-        public Door(string description, string detailedDescription, bool locked, Facing facing, Room leadsToo)
+        public Door(Facing facing, Room leadsToo)
         {
             Name = "Door";
-            Description = description;
-            DetailedDescription = detailedDescription;
+            Description = "Wood door";
+            DetailedDescription = "It's a normal door, what do you want?";
             Direction = facing;
-            Locked = locked;
+            Locked = false;
             LeadsToo = leadsToo;
         }
 

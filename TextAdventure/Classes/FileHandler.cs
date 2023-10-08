@@ -8,19 +8,6 @@
         private static StreamReader reader;
         private static StreamWriter writer;
 
-        public static void WriteToFile(string text, string fileType)
-        {
-            switch (fileType.ToLower())
-            {
-                case "rooms":
-                    break;
-                case "items":
-                    break;
-                case "map":
-                    break;
-            }
-        }
-
         public static List<Room> GetRooms()
         {
             List<Room> rooms = new();
@@ -28,15 +15,16 @@
             {
                 while (!reader.EndOfStream)
                 {
-                    List<string> roomProps = reader.ReadLine().Split().ToList();
-                    List<string> itemIds = roomProps[3].Split().ToList();
+                    List<string> roomProps = reader.ReadLine().Split(",").ToList();
+                    List<string> itemIds = roomProps[3].Split("§").ToList();
                     Room room = new(roomProps[0], roomProps[1], roomProps[2], itemIds.Select(i => int.Parse(i)).ToList());
+                    rooms.Add(room);
                 }
             }
             return rooms;
         }
 
-        public static List<Item> GetItems()
+        public static List<Item> GetAllItems()
         {
             List<Item> items = new();
             using (reader = new(ItemsFilePath))
@@ -49,6 +37,24 @@
                 }
             }
             return items;
+        }
+
+        public static void AddItemToFile(Item item)
+        {
+            using (writer = new(ItemsFilePath, true))
+            {
+                writer.WriteLine(item.Name + "," + item.Description + "," + item.DetailedDescription);
+            }
+        }
+        public static void AddRoomToFile(Room room)
+        {
+            string roomItemIds = string.Empty;
+            room.ItemsById.ForEach(i => roomItemIds += i.ToString() + "§");
+            roomItemIds = roomItemIds.Remove(roomItemIds.Length - 1);
+            using (writer = new(RoomsFilePath, true))
+            {
+                writer.Write("\n" + room.Name + "," + room.Description + "," + room.DetailedDescription + "," + roomItemIds);
+            }
         }
     }
 }

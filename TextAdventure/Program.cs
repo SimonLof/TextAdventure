@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using TextAdventure.Classes;
+﻿using TextAdventure.Classes;
 
 internal class Program
 {
@@ -10,22 +9,11 @@ internal class Program
         bool running = true;
         Console.Write("Enter your name: ");
         Player player = new(name: Console.ReadLine());
-        if(player.Name.ToLower() == "god")
+        if (player.Name.ToLower() == "god")
         {
             CreatorMode();
         }
-        FileHandler.GetItems(); // Create all items
-        Room otherRoom = new("Kitchen", "A damp kitchen full of mold and cockroaches.",
-            "Upon further inspection you notice the cockroaches have made a small society in one of the cabins... They seem happy.", new() { 2, 3 });
-        Room room = new("Starting room", "A dark cellar.", "The room reeks of fish and cheese.", new() { 0, 1 });
-
-        // first make all the rooms, then make all the doors.
-        Door rood = new("Wooden door", "It's made of wood.", false, Facing.North, room);
-        Door door = new("Wooden door", "It's made of wood.", false, Facing.South, otherRoom);
-        room.AddDoors(new() { door });
-        otherRoom.AddDoors(new() { rood });
-        Map map = new(room);
-        map.AddRoom(otherRoom);
+        Map map = GameSetUp();
 
         // Make a 'visited' prop in room and list all visited rooms and coords when looking at "map"?
         // Or try to draw a map OMEGALUL
@@ -33,18 +21,18 @@ internal class Program
         // Main loop
         while (running)
         {
-            if (firstLook)
-            {
-                Console.WriteLine(map.CurrentRoom.Description);
-                firstLook = false;
-            }
-            // Input handler starting to work out!
-            string userInput = Console.ReadLine();
-            if (userInput == null || userInput == "") { continue; }
             try
             {
-                InputHandler.GetOutcome(userInput, ref player, ref map, ref running);
+                if (firstLook)
+                {
+                    Console.WriteLine(map.CurrentRoom.Description);
+                    firstLook = false;
+                }
+                // Input handler starting to work out!
+                string userInput = Console.ReadLine();
+                if (userInput == null || userInput == "") { continue; }
 
+                InputHandler.GetOutcome(userInput, ref player, ref map, ref running);
             }
             catch (Exception ex)
             {
@@ -52,9 +40,70 @@ internal class Program
             }
         }
     }
-    public static void CreatorMode()
+    public static Map GameSetUp()
     {
-        Console.WriteLine("Make a map.");
-        while(Console.ReadLine() != "q") { }
+        FileHandler.GetAllItems();
+        Map map = new();
+        Random random = new(Environment.TickCount);
+        List<Room> rooms = FileHandler.GetRooms();
+        Facing previousRoom = Facing.South;
+        rooms[0].AddDoors(new() { new(previousRoom, rooms[1]) });
+        for (int i = 1; i < rooms.Count - 1; i++)
+        {
+            Facing oldFacing = previousRoom;
+            rooms[i].Doors.Add(new(InvertFacing(previousRoom), rooms[i - 1]));
+            while (previousRoom == oldFacing)
+                previousRoom = (Facing)random.Next(4);
+            rooms[i].Doors.Add(new(previousRoom, rooms[i + 1]));
+        }
+        rooms[^1].AddDoors(new() { new(InvertFacing(previousRoom), rooms[^2]) }); // Final door for final room
+        foreach (Room room in rooms)
+        {
+            map.AddRoom(room);
+        }
+        map.CurrentRoom = map.MapLayout[0];
+        return map;
+    }
+    private static Facing InvertFacing(Facing facing)
+    {
+        return facing switch
+        {
+            Facing.North => Facing.South,
+            Facing.South => Facing.North,
+            Facing.West => Facing.East,
+            Facing.East => Facing.West,
+            _ => Facing.North,
+        };
+    }
+    public static void CreatorMode()
+    { // put this in its own class
+        string userInput = "";
+        while (userInput != "q")
+        {
+            Console.WriteLine("Add (r)oom or add (i)tem. Map will be generated from the rooms. (a)ll items and their index, for room construction.");
+            userInput = Console.ReadLine();
+            switch (userInput)
+            {
+                case "r":
+                    Console.WriteLine("\"<Name>,<Description>,<Detailed Description>,<item1>§<item2>§<item3>\" if no items just typ 999");
+                    string makeRoom = Console.ReadLine();
+                    if (makeRoom != "")
+                    {
+                        try
+                        {
+                            List<string> roomProps = makeRoom.Split(',').ToList();
+                            List<string> roomItemIds = roomProps[3].Split('§').ToList();
+                            Room room = new(roomProps[0], roomProps[1], roomProps[2], roomItemIds.Select(i => int.Parse(i)).ToList());
+                            FileHandler.AddRoomToFile(room);
+                            Console.WriteLine(room.Name + " added.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+                    break;
+            }
+        }
     }
 }

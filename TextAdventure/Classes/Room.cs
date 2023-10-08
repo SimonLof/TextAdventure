@@ -3,8 +3,7 @@
     public class Room : BaseObject
     {
         public List<int> ItemsById { get; set; }
-        public List<Door> Doors { get; set; }
-
+        public List<Door> Doors { get; set; } = new List<Door>();
         public Room(string name, string description, string detailedDescription,
                     List<int> items)
         {
@@ -12,7 +11,6 @@
             Description = description;
             DetailedDescription = detailedDescription;
             ItemsById = items;
-            Doors = new List<Door>();
         }
 
         public void AddDoors(List<Door> doors)
