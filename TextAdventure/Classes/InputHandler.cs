@@ -54,7 +54,7 @@
                             case "up":
                                 if (inputCommands.Count > 2)
                                 {
-                                    List<Item> roomItems = map.GetRoomFromCoords(player.Coords).Items;
+                                    List<Item> roomItems = map.CurrentRoom.Items;
                                     if (roomItems.Count > 0)
                                     {
                                         bool itemFound = false;
@@ -63,7 +63,7 @@
                                             if (item.Name.ToLower() == inputCommands[2].ToLower())
                                             {
                                                 player.PickUpItem(item);
-                                                map.GetRoomFromCoords(player.Coords).Items.Remove(item);
+                                                map.CurrentRoom.Items.Remove(item);
                                                 Console.WriteLine($"You picked up {item.Name}.");
                                                 itemFound = true;
                                                 break;
@@ -109,7 +109,7 @@
                     {
                         if (inputCommands[1].ToLower() == "around")
                         {
-                            Item[] items = map.GetRoomFromCoords(player.Coords).Items.ToArray();
+                            Item[] items = map.CurrentRoom.Items.ToArray();
                             if (items.Length > 0)
                             {
                                 foreach (Item item in items)
@@ -130,13 +130,10 @@
         }
         private static bool LookForTheDoor(Player player, Map map, Facing facing)
         {
-            if (map.GetRoomFromCoords(player.Coords).Doors.Any(d => d.Direction == facing))
+            if (map.CurrentRoom.Doors.Any(d => d.Direction == facing))
             {
-                Console.WriteLine(map.GetRoomFromCoords(player.Coords).Doors.SingleOrDefault(d => d.Direction == facing)?.Name);
-                if (facing == Facing.North) player.Coords.Y += 1;
-                if (facing == Facing.South) player.Coords.Y -= 1;
-                if (facing == Facing.East) player.Coords.X += 1;
-                if (facing == Facing.West) player.Coords.X -= 1;
+                map.CurrentRoom = map.CurrentRoom.Doors.Where(d => d.Direction == facing).SingleOrDefault().LeadsToo;
+                Console.WriteLine(map.CurrentRoom.Description);
                 return true;
             }
             else

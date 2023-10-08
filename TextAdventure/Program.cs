@@ -18,16 +18,16 @@ internal class Program
                 allItems.Add(new(itemStrings[0], itemStrings[1], itemStrings[2], new List<Item>()));
             }
         }
-        Door door = new("Wooden door", "It's made of wood.", false, Facing.South);
+        Room otherRoom = new("Kitchen", "A damp kitchen full of mold and cockroaches.",
+            "Upon further inspection you notice the cockroaches have made a small society in one of the cabins... They seem happy.", new List<Item>());
+        Door door = new("Wooden door", "It's made of wood.", false, Facing.South, otherRoom);
         List<Door> doors = new()
         {
             door
         };
-        RoomEvent roomEvent = new("Nothing.", "Nothing special here.");
-
-        Map map = new();
-        Room room = new("Starting room", "A dark cellar.", "Reeks of fish and cheese.", allItems, roomEvent, doors);
-        map.AddRoom(new(0, 0), room);
+        Room room = new("Starting room", "A dark cellar.", "Reeks of fish and cheese.", allItems);
+        room.AddDoors(doors);
+        Map map = new(room);
 
         // Make a 'visited' prop in room and list all visited rooms and coords when looking at "map"?
         // Or try to draw a map OMEGALUL
@@ -37,8 +37,7 @@ internal class Program
         {
             if (firstLook)
             {
-                Console.WriteLine(map.GetRoomFromCoords(player.Coords).Description);
-                Console.WriteLine(map.GetRoomFromCoords(player.Coords).RoomEvent.Description);
+                Console.WriteLine(map.CurrentRoom.Description);
                 firstLook = false;
             }
             // Input handler starting to work out!

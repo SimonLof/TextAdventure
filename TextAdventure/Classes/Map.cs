@@ -2,39 +2,31 @@
 {
     public class Map
     {
-        public Dictionary<Coordinates, Room> MapLayout { get; set; }
+        public List<Room> MapLayout { get; set; }
+        public Room CurrentRoom { get; set; }
 
-        public Map()
+        public Map(Room startingRoom)
         {
-            MapLayout = new Dictionary<Coordinates, Room>();
+            MapLayout = new List<Room>();
+            CurrentRoom = startingRoom;
         }
-        public Room GetRoomFromCoords(Coordinates coords)
+        public Room GetCurrentRoom()
         {
-            return MapLayout.Where(c => c.Key.X == coords.X && c.Key.Y == coords.Y).SingleOrDefault().Value;
+            return CurrentRoom;
         }
 
-        public bool AddRoom(Coordinates coords, Room room)
+        public void AddRoom(Room room)
         {
-            // If there is already a room at gives coordinates, returns false
-            // Otherwise adds the room to the coordinates and returns true
-            if (MapLayout.Any(o => o.Key.X == coords.X && o.Key.Y == coords.Y))
-            {
-                return false;
-            }
+            MapLayout.Add(room);
+        }
+        public bool RemoveRoom(Room room)
+        {
+            int len = MapLayout.Count;
+            MapLayout = MapLayout.Where(r => r.Name != room.Name).ToList();
+            if (len != MapLayout.Count)
+            { return true; }
             else
-            {
-                MapLayout.Add(coords, room);
-                return true;
-            }
-        }
-        public bool RemoveRoom(Coordinates coords)
-        {
-            if (MapLayout.TryGetValue(coords, out Room? value) && value.Name != "End")
-            {
-                MapLayout.Remove(coords);
-                return true;
-            }
-            else { return false; }
+            { return false; }
         }
     }
 }
