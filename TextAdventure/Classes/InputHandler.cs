@@ -3,7 +3,6 @@
     public static class InputHandler
     {
         #region input handler using .split(' ')
-        // New version of inputhandling
         public static void GetOutcome(string inputString, ref Player player, ref Map map, ref bool running)
         {
             while(inputString.Contains("  "))
@@ -146,7 +145,7 @@
                                 if (lookingAt == null)
                                 { Console.WriteLine("Nothing here named " + inputCommands[2]); }
                                 else
-                                { Console.WriteLine(lookingAt.Name + ": " + lookingAt.DetailedDescription); }
+                                { Console.WriteLine(lookingAt.Name + " - " + lookingAt.DetailedDescription); }
                             }
                         }
                     }
