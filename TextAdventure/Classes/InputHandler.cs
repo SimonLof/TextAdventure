@@ -139,7 +139,7 @@
                                 BaseObject lookingAt = player.Inventory.SingleOrDefault(i => i.Name.ToLower().Equals(inputCommands[2].ToLower())) ??
                                                        map.CurrentRoom.GetItemsInRoom().SingleOrDefault(i => i.Name.ToLower().Equals(inputCommands[2].ToLower()));
                                 if (lookingAt == null)
-                                { lookingAt = map.CurrentRoom.Doors.SingleOrDefault(d => d.Name.ToLower() == inputCommands[2].ToLower()); }
+                                { lookingAt = map.CurrentRoom.Doors.FirstOrDefault(d => d.Name.ToLower() == inputCommands[2].ToLower()); }
                                 if (lookingAt == null)
                                 { lookingAt = "room" == inputCommands[2].ToLower() ? map.CurrentRoom : null; }
                                 if (lookingAt == null)

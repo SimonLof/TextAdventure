@@ -26,10 +26,6 @@ internal class Program
                 ScreenWriter.ConsoleWriteLine(map.CurrentRoom.Description);
                 firstLook = false;
             }
-            // Input handler starting to work out!
-            string userInput = Console.ReadLine();
-            if (userInput == null || userInput == "") { continue; }
-
             try
             {
                 if (firstLook)
@@ -60,10 +56,10 @@ internal class Program
         rooms[0].AddDoors(new() { new(previousRoom, rooms[1]) });
         for (int i = 1; i < rooms.Count - 1; i++)
         {
-            Facing oldFacing = previousRoom;
-            rooms[i].Doors.Add(new(InvertFacing(previousRoom), rooms[i - 1]));
-            while (previousRoom == oldFacing)
-                previousRoom = (Facing)random.Next(4);
+            Facing firstDoorDirection = InvertFacing(previousRoom);
+            rooms[i].Doors.Add(new(firstDoorDirection, rooms[i - 1]));
+            previousRoom = (Facing)random.Next(4);
+            while (previousRoom == firstDoorDirection) { previousRoom = (Facing)random.Next(4); }
             rooms[i].Doors.Add(new(previousRoom, rooms[i + 1]));
         }
         rooms[^2].Doors[1].Locked = true; // If a room has more than 2 doors I have to change this.
