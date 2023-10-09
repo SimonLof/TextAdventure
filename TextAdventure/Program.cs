@@ -40,6 +40,7 @@ internal class Program
             }
         }
     }
+    #region Creation and setup
     public static Map GameSetUp()
     {
         FileHandler.GetAllItems();
@@ -56,7 +57,8 @@ internal class Program
                 previousRoom = (Facing)random.Next(4);
             rooms[i].Doors.Add(new(previousRoom, rooms[i + 1]));
         }
-        rooms[^1].AddDoors(new() { new(InvertFacing(previousRoom), rooms[^2]) }); // Final door for final room
+        rooms[^2].Doors[1].Locked = true; // If a room has more than 2 doors I have to change this.
+        rooms[^1].AddDoors(new() { new(InvertFacing(previousRoom), rooms[^2]) });
         foreach (Room room in rooms)
         {
             map.AddRoom(room);
@@ -106,4 +108,5 @@ internal class Program
             }
         }
     }
+    #endregion
 }
