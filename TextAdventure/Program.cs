@@ -17,6 +17,11 @@ internal class Program
             {
                 CreatorMode();
             }
+            else if (wargames.ToLower() is "no" or "n")
+            {
+                running = false;
+                break;
+            }
         }
         Console.Clear();
         Map map = GameSetUp();
@@ -112,10 +117,23 @@ internal class Program
                         }
                     }
                     break;
+                case "i":
+                    // code for item creation
+                    break;
+                case "a":
+                    try
+                    {
+                        foreach (Item item in FileHandler.GetAllItems())
+                        {
+                            ScreenWriter.ConsoleWriteLine(item.Id + " : " + item.Name + " : " + item.Description, 0);
+                        }
+                        break;
+                    }
+                    catch { break; }
             }
         }
         ScreenWriter.ConsoleWrite("Quitting creator mode");
-        ScreenWriter.ConsoleWriteLine("..................", 250);
+        ScreenWriter.ConsoleWriteLine(".......", 250);
     }
     #endregion
 }
