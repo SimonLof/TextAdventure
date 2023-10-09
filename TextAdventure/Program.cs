@@ -4,28 +4,27 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        // Set up ------- make breakout method for setup and setup from textfiles
-        // Just experimental stuff that should be replaced.
         bool running = true;
-        ScreenWriter.ConsoleWrite("Enter your name: ");
+        string wargames = string.Empty;
+        ScreenWriter.ConsoleWrite("What is your name? ");
         Player player = new(name: Console.ReadLine());
-        if (player.Name.ToLower() == "god")
+        ScreenWriter.ConsoleWriteLine("....", 250);
+        while (wargames.ToLower() != "y" && wargames.ToLower() != "yes")
         {
-            CreatorMode();
+            ScreenWriter.ConsoleWrite("Shall we play a game? ");
+            wargames = Console.ReadLine();
+            if (wargames.ToLower() is "gtw" or "global thermonuclear war")
+            {
+                CreatorMode();
+            }
         }
+        Console.Clear();
         Map map = GameSetUp();
 
-        // Make a 'visited' prop in room and list all visited rooms and coords when looking at "map"?
-        // Or try to draw a map OMEGALUL
         bool firstLook = true;
         // Main loop
         while (running)
         {
-            if (firstLook)
-            {
-                ScreenWriter.ConsoleWriteLine(map.CurrentRoom.Description);
-                firstLook = false;
-            }
             try
             {
                 if (firstLook)
@@ -35,8 +34,11 @@ internal class Program
                 }
                 // Input handler starting to work out!
                 string userInput = Console.ReadLine();
-                if (userInput == null || userInput == "") { continue; }
-
+                if (userInput == null || userInput == "")
+                {
+                    ScreenWriter.ConsoleWrite("Please say something. ");
+                    continue;
+                }
                 InputHandler.GetOutcome(userInput, ref player, ref map, ref running);
             }
             catch (Exception ex)
@@ -62,7 +64,7 @@ internal class Program
             while (previousRoom == firstDoorDirection) { previousRoom = (Facing)random.Next(4); }
             rooms[i].Doors.Add(new(previousRoom, rooms[i + 1]));
         }
-        rooms[^2].Doors[1].Locked = true; // If a room has more than 2 doors I have to change this.
+        rooms[^2].Doors[^1].Locked = true; // If a room has more than 2 doors I have to change this.
         rooms[^1].AddDoors(new() { new(InvertFacing(previousRoom), rooms[^2]) });
         foreach (Room room in rooms)
         {
@@ -112,6 +114,8 @@ internal class Program
                     break;
             }
         }
+        ScreenWriter.ConsoleWrite("Quitting creator mode");
+        ScreenWriter.ConsoleWriteLine("..................", 250);
     }
     #endregion
 }
