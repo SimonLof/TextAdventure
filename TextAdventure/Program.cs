@@ -7,7 +7,7 @@ internal class Program
         // Set up ------- make breakout method for setup and setup from textfiles
         // Just experimental stuff that should be replaced.
         bool running = true;
-        Console.Write("Enter your name: ");
+        ScreenWriter.ConsoleWrite("Enter your name: ");
         Player player = new(name: Console.ReadLine());
         if (player.Name.ToLower() == "god")
         {
@@ -21,6 +21,15 @@ internal class Program
         // Main loop
         while (running)
         {
+            if (firstLook)
+            {
+                ScreenWriter.ConsoleWriteLine(map.CurrentRoom.Description);
+                firstLook = false;
+            }
+            // Input handler starting to work out!
+            string userInput = Console.ReadLine();
+            if (userInput == null || userInput == "") { continue; }
+
             try
             {
                 if (firstLook)
@@ -36,7 +45,7 @@ internal class Program
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                ScreenWriter.ConsoleWriteLine(ex.Message);
             }
         }
     }
