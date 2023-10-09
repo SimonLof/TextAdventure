@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using TextAdventure.Classes;
+﻿using TextAdventure.Classes;
 
 internal class Program
 {
@@ -8,7 +7,7 @@ internal class Program
         // Set up ------- make breakout method for setup and setup from textfiles
         // Just experimental stuff that should be replaced.
         bool running = true;
-        Console.Write("Enter your name: ");
+        ScreenWriter.ConsoleWrite("Enter your name: ");
         Player player = new(name: Console.ReadLine());
         if(player.Name.ToLower() == "god")
         {
@@ -35,7 +34,7 @@ internal class Program
         {
             if (firstLook)
             {
-                Console.WriteLine(map.CurrentRoom.Description);
+                ScreenWriter.ConsoleWriteLine(map.CurrentRoom.Description);
                 firstLook = false;
             }
             // Input handler starting to work out!
@@ -48,13 +47,13 @@ internal class Program
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                ScreenWriter.ConsoleWriteLine(ex.Message);
             }
         }
     }
     public static void CreatorMode()
     {
-        Console.WriteLine("Make a map.");
+        ScreenWriter.ConsoleWriteLine("Make a map.");
         while(Console.ReadLine() != "q") { }
     }
 }

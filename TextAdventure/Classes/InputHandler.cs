@@ -6,7 +6,7 @@
         // New version of inputhandling
         public static void GetOutcome(string inputString, ref Player player, ref Map map, ref bool running)
         {
-            while(inputString.Contains("  "))
+            while (inputString.Contains("  "))
             {
                 inputString = inputString.Replace("  ", " ");
             }
@@ -15,13 +15,13 @@
             switch (inputCommands[0].ToLower())
             {
                 case "q":
-                    Console.Write("Are you sure?(y/n) ");
+                    ScreenWriter.ConsoleWrite("Are you sure?(y/n) ", 0);
                     if (Console.ReadLine().ToString().ToLower().Trim() == "y")
                     {
                         running = false;
                     }
                     else
-                        Console.WriteLine("Aborted quit.");
+                        ScreenWriter.ConsoleWriteLine("Aborted quit.", 0);
                     break;
                 case "go":
                     if (numberOfCommands > 1)
@@ -41,12 +41,12 @@
                                 LookForTheDoor(player, map, Facing.West);
                                 break;
                             default:
-                                Console.WriteLine($"Can't go {inputCommands[1]}.");
+                                ScreenWriter.ConsoleWriteLine($"Can't go {inputCommands[1]}.");
                                 break;
                         }
                     }
                     else
-                        Console.WriteLine("Go where?");
+                        ScreenWriter.ConsoleWriteLine("Go where?");
                     break;
                 case "pick":
                     if (inputCommands.Count > 1)
@@ -67,69 +67,69 @@
                                             {
                                                 player.PickUpItem(item);
                                                 map.CurrentRoom.ItemsById.Remove(item.Id);
-                                                Console.WriteLine($"You picked up {item.Name}.");
+                                                ScreenWriter.ConsoleWriteLine($"You picked up {item.Name}.");
                                                 itemFound = true;
                                                 break;
                                             }
                                         }
                                         if (!itemFound)
-                                            Console.WriteLine($"No item named {inputCommands[2]} in this room.");
+                                            ScreenWriter.ConsoleWriteLine($"No item named {inputCommands[2]} in this room.");
                                     }
                                 }
                                 else
                                 {
-                                    Console.WriteLine("Pick up what?");
+                                    ScreenWriter.ConsoleWriteLine("Pick up what?");
                                 }
                                 break;
                             case "nose":
-                                Console.WriteLine("Gross.");
+                                ScreenWriter.ConsoleWriteLine("Gross.");
                                 break;
                             case "ass":
-                                Console.WriteLine("You like it.");
+                                ScreenWriter.ConsoleWriteLine("You like it.");
                                 break;
                             case "bellybutton":
-                                Console.WriteLine("A sense of serenity washes over you...");
+                                ScreenWriter.ConsoleWriteLine("A sense of serenity washes over you...");
                                 break;
                             default:
-                                Console.WriteLine("Pick what?");
+                                ScreenWriter.ConsoleWriteLine("Pick what?");
                                 break;
                         }
                     }
                     else
-                        Console.WriteLine("Pick what?");
+                        ScreenWriter.ConsoleWriteLine("Pick what?");
                     break;
                 case "bag":
                     if (player.Inventory.Count > 0)
                     {
                         foreach (Item item in player.Inventory)
-                            Console.WriteLine(item.Name + ": " + item.Description);
+                            ScreenWriter.ConsoleWriteLine(item.Name + ": " + item.Description);
                     }
                     else
-                        Console.WriteLine("You bag is empty.");
+                        ScreenWriter.ConsoleWriteLine("You bag is empty.");
                     break;
                 case "look":
                     if (numberOfCommands > 1)
                     {
                         if (inputCommands[1].ToLower() == "around")
                         {
-                            Console.WriteLine("You see...");
+                            ScreenWriter.ConsoleWriteLine("You see...", 150);
                             foreach (Door door in map.CurrentRoom.Doors)
                             {
-                                Console.WriteLine("A door facing " + door.Direction.ToString());
+                                ScreenWriter.ConsoleWriteLine("A door facing " + door.Direction.ToString());
                             }
-                            Console.WriteLine(map.CurrentRoom.DetailedDescription);
+                            ScreenWriter.ConsoleWriteLine(map.CurrentRoom.DetailedDescription);
                             List<Item> items = map.CurrentRoom.GetItemsInRoom();
                             if (items.Count > 0)
                             {
-                                Console.WriteLine("You also see some items...");
+                                ScreenWriter.ConsoleWriteLine("You also see some items...");
                                 foreach (Item item in items)
                                 {
-                                    Console.WriteLine(item.Name + ": " + item.Description);
+                                    ScreenWriter.ConsoleWriteLine(item.Name + ": " + item.Description);
                                 }
                             }
                             else
                             {
-                                Console.WriteLine("No items in this room.");
+                                ScreenWriter.ConsoleWriteLine("No items in this room.");
                             }
                         }
                         else if (inputCommands[1].ToLower() == "at")
@@ -144,9 +144,9 @@
                                 if (lookingAt == null)
                                 { lookingAt = "room" == inputCommands[2].ToLower() ? map.CurrentRoom : null; }
                                 if (lookingAt == null)
-                                { Console.WriteLine("Nothing here named " + inputCommands[2]); }
+                                { ScreenWriter.ConsoleWriteLine("Nothing here named " + inputCommands[2]); }
                                 else
-                                { Console.WriteLine(lookingAt.Name + ": " + lookingAt.DetailedDescription); }
+                                { ScreenWriter.ConsoleWriteLine(lookingAt.Name + ": " + lookingAt.DetailedDescription); }
                             }
                         }
                     }
@@ -159,13 +159,14 @@
         {
             if (map.CurrentRoom.Doors.Any(d => d.Direction == facing))
             {
+                ScreenWriter.ConsoleWriteLine("Going " + facing.ToString().ToLower() +"...", 100);
                 map.CurrentRoom = map.CurrentRoom.Doors.Where(d => d.Direction == facing).SingleOrDefault().LeadsToo;
-                Console.WriteLine(map.CurrentRoom.Description);
+                ScreenWriter.ConsoleWriteLine(map.CurrentRoom.Description);
                 return true;
             }
             else
             {
-                Console.WriteLine("No door that way.");
+                ScreenWriter.ConsoleWriteLine("No door that way.");
                 return false;
             }
         }
