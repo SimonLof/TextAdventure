@@ -7,7 +7,6 @@
         private static readonly string MapFilePath = ".\\map.txt"; // Save current map to continue playing? Later project
         private static StreamReader? reader;
         private static StreamWriter? writer;
-
         public static List<Room> GetRooms()
         {
             List<Room> rooms = new();
@@ -58,7 +57,6 @@
             }
             return items;
         }
-
         public static void AddItemToFile(Item item)
         {
             try

@@ -15,7 +15,7 @@ internal class Program
             wargames = Console.ReadLine();
             if (wargames.ToLower() is "gtw" or "global thermonuclear war")
             {
-                CreatorMode();
+                InputHandler.CreatorMode();
             }
             else if (wargames.ToLower() is "no" or "n")
             {
@@ -89,51 +89,51 @@ internal class Program
             _ => Facing.North,
         };
     }
-    public static void CreatorMode()
-    { // put this in its own class
-        string userInput = "";
-        while (userInput != "q")
-        {
-            Console.WriteLine("Add (r)oom or add (i)tem. Map will be generated from the rooms. (a)ll items and their index, for room construction.");
-            userInput = Console.ReadLine();
-            switch (userInput)
-            {
-                case "r":
-                    Console.WriteLine("\"<Name>,<Description>,<Detailed Description>,<item1>§<item2>§<item3>\" if no items just typ 999");
-                    string makeRoom = Console.ReadLine();
-                    if (makeRoom != "")
-                    {
-                        try
-                        {
-                            List<string> roomProps = makeRoom.Split(',').ToList();
-                            List<string> roomItemIds = roomProps[3].Split('§').ToList();
-                            Room room = new(roomProps[0], roomProps[1], roomProps[2], roomItemIds.Select(i => int.Parse(i)).ToList());
-                            FileHandler.AddRoomToFile(room);
-                            Console.WriteLine(room.Name + " added.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                    }
-                    break;
-                case "i":
-                    // code for item creation
-                    break;
-                case "a":
-                    try
-                    {
-                        foreach (Item item in FileHandler.GetAllItems())
-                        {
-                            ScreenWriter.ConsoleWriteLine(item.Id + " : " + item.Name + " : " + item.Description, 0);
-                        }
-                        break;
-                    }
-                    catch { break; }
-            }
-        }
-        ScreenWriter.ConsoleWrite("Quitting creator mode");
-        ScreenWriter.ConsoleWriteLine(".......", 250);
-    }
+    //public static void CreatorMode()
+    //{ // put this in its own class
+    //    string userInput = "";
+    //    while (userInput != "q")
+    //    {
+    //        Console.WriteLine("Add (r)oom or add (i)tem. Map will be generated from the rooms. (a)ll items and their index, for room construction.");
+    //        userInput = Console.ReadLine();
+    //        switch (userInput)
+    //        {
+    //            case "r":
+    //                Console.WriteLine("\"<Name>,<Description>,<Detailed Description>,<item1>§<item2>§<item3>\" if no items just typ 999");
+    //                string makeRoom = Console.ReadLine();
+    //                if (makeRoom != "")
+    //                {
+    //                    try
+    //                    {
+    //                        List<string> roomProps = makeRoom.Split(',').ToList();
+    //                        List<string> roomItemIds = roomProps[3].Split('§').ToList();
+    //                        Room room = new(roomProps[0], roomProps[1], roomProps[2], roomItemIds.Select(i => int.Parse(i)).ToList());
+    //                        FileHandler.AddRoomToFile(room);
+    //                        Console.WriteLine(room.Name + " added.");
+    //                    }
+    //                    catch (Exception ex)
+    //                    {
+    //                        Console.WriteLine(ex.Message);
+    //                    }
+    //                }
+    //                break;
+    //            case "i":
+    //                // code for item creation
+    //                break;
+    //            case "a":
+    //                try
+    //                {
+    //                    foreach (Item item in FileHandler.GetAllItems())
+    //                    {
+    //                        ScreenWriter.ConsoleWriteLine(item.Id + " : " + item.Name + " : " + item.Description, 0);
+    //                    }
+    //                    break;
+    //                }
+    //                catch { break; }
+    //        }
+    //    }
+    //    ScreenWriter.ConsoleWrite("Quitting creator mode");
+    //    ScreenWriter.ConsoleWriteLine(".......", 250);
+    //}
     #endregion
 }

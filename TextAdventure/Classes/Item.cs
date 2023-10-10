@@ -30,19 +30,19 @@
             AllItems.Add(this);
         }
 
-        public int UseItemWith(int id, Door? door = null)
-        {
-            if (CanBeUsedWith.ContainsKey(id))
-            {
-                if (id == 999) { door.Unlock(); } // Key can be used with item 999, can make more complex logic with door names and Ids. But only 1 locked door for now.
-                string[] effectOfCombination = CanBeUsedWith[id].Split('§'); // index 0 is string to describe effect, index 1 is item reward from combo.
-                ScreenWriter.ConsoleWriteLine(effectOfCombination[0]);       // Can add index 2 to indicate the removal/non-removal of used items?
-                if (effectOfCombination.Length > 1)                          // Default to removal of items. Maybe add prop for destruction of item.
-                {
-                    return int.Parse(effectOfCombination[1]);
-                }
-            }
-            return 0;
-        }
+        //public int UseItemWith(int id, Door? door = null)   Make own class for interactions.
+        //{
+        //    if (CanBeUsedWith.ContainsKey(id))
+        //    {
+        //        if (id == 999) { door.Unlock(); } // Key can be used with item 999, can make more complex logic with door names and Ids. But only 1 locked door for now.
+        //        string[] effectOfCombination = CanBeUsedWith[id].Split('§'); // index 0 is string to describe effect, index 1 is item reward from combo.
+        //        ScreenWriter.ConsoleWriteLine(effectOfCombination[0]);       // Can add index 2 to indicate the removal/non-removal of used items?
+        //        if (effectOfCombination.Length > 1)                          // Default to removal of items. Maybe add prop for destruction of item.
+        //        {
+        //            return int.Parse(effectOfCombination[1]);
+        //        }
+        //    }
+        //    return 0;
+        //}
     }
 }
