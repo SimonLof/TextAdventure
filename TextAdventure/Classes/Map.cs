@@ -9,11 +9,6 @@
         {
             MapLayout = new List<Room>();
         }
-        public Room GetCurrentRoom()
-        {
-            return CurrentRoom;
-        }
-
         public void AddRoom(Room room)
         {
             MapLayout.Add(room);

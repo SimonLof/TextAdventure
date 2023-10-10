@@ -26,7 +26,7 @@
                     }
                 }
                 else
-                {
+                { // base rooms
                     AddRoomToFile(new Room("Staring room", "A small closet. You don't know how you got here.", "It's very crammed.", new() { 0, 1 }));
                     AddRoomToFile(new Room("Kitchen", "A small kitchen. Empty pots and pans everywhere.", "You see some cockroaches who seem to be building a nest... strange.", new() { 2, 3 }));
                     rooms = GetRooms();
@@ -41,29 +41,37 @@
             List<Item> items = new();
             try
             {
-                using (reader = new(ItemsFilePath))
+                if (File.Exists(ItemsFilePath))
                 {
-                    while (!reader.EndOfStream)
+                    using (reader = new(ItemsFilePath))
                     {
-                        string[] line = reader.ReadLine().Split(',');
-                        Item item = new(line[0], line[1], line[2]);
-                        items.Add(item);
+                        while (!reader.EndOfStream)
+                        {
+                            string[] line = reader.ReadLine().Split(',');
+                            Item item = new(line[0], line[1], line[2]);
+                            items.Add(item);
+                        }
                     }
                 }
+                else
+                { // base items
+                    AddItemToFile(new("Key", "A rusty key.", "You think it opens the exit..."));
+                    AddItemToFile(new("Sword", "A dull and rusty old sword.", "It'll probably break if you use it. Better not. You could hurt yourself!"));
+                    items = GetAllItems();
+                }
+                return items;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return items;
+            catch { return items; }
         }
         public static void AddItemToFile(Item item)
         {
             try
             {
+                string firstItem = "";
+                if (File.Exists(ItemsFilePath)) firstItem = "\n";
                 using (writer = new(ItemsFilePath, true))
                 {
-                    writer.WriteLine(item.Name + "," + item.Description + "," + item.DetailedDescription);
+                    writer.Write(firstItem + item.Name + "," + item.Description + "," + item.DetailedDescription);
                 }
             }
             catch (Exception ex) { Console.WriteLine(ex.Message); }

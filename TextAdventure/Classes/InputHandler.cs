@@ -2,7 +2,7 @@
 {
     public static class InputHandler
     {
-        #region input handler using .split(' ')
+        #region Game input handle
         public static void GetOutcome(string inputString, ref Player player, ref Map map, ref bool running)
         {
             try
@@ -103,7 +103,7 @@
                         if (player.Inventory.Count > 0)
                         {
                             foreach (Item item in player.Inventory)
-                                ScreenWriter.ConsoleWriteLine(item.Name + ": " + item.Description);
+                                ScreenWriter.ConsoleWriteLine(item.Name + " - " + item.Description);
                         }
                         else
                             ScreenWriter.ConsoleWriteLine("You bag is empty.");
@@ -125,7 +125,7 @@
                                     ScreenWriter.ConsoleWriteLine("You also see some items...");
                                     foreach (Item item in items)
                                     {
-                                        ScreenWriter.ConsoleWriteLine(item.Name + ": " + item.Description);
+                                        ScreenWriter.ConsoleWriteLine(item.Name + " - " + item.Description);
                                     }
                                 }
                                 else
@@ -198,6 +198,7 @@
         }
         #endregion
 
+        #region Creator mode
         public static void CreatorMode()
         { // put this in its own class
             FileHandler.GetAllItems();
@@ -230,23 +231,25 @@
                     case "i":
                         Console.WriteLine("\"<Name>,<Description>,<Detailed Description>\" Id is automatic, item-interaction are its own thing.");
                         string makeItem = Console.ReadLine();
-                        try
+                        if (makeItem != "")
                         {
-                            List<string> itemProps = makeItem.Split(',').ToList();
-                            Item item = new(itemProps[0], itemProps[1], itemProps[2]);
-                            FileHandler.AddItemToFile(item);
-                            Console.WriteLine(item.Name + " added.");
+                            try
+                            {
+                                List<string> itemProps = makeItem.Split(',').ToList();
+                                Item item = new(itemProps[0], itemProps[1], itemProps[2]);
+                                FileHandler.AddItemToFile(item);
+                                Console.WriteLine(item.Name + " added.");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-                        // code for item creation
                         break;
                     case "a":
                         try
                         {
-                            foreach (Item item in Item.AllItems) // Göra en lita i början av creator mode för att få rätt item index, när nya items läggs till så läggs de automatiskt till i allitem listan.
+                            foreach (Item item in Item.AllItems)
                             {
                                 ScreenWriter.ConsoleWriteLine(item.Id + " : " + item.Name + " : " + item.Description, 0);
                             }
@@ -258,5 +261,6 @@
             ScreenWriter.ConsoleWrite("Quitting creator mode");
             ScreenWriter.ConsoleWriteLine(".......", 250);
         }
+        #endregion
     }
 }
