@@ -224,7 +224,6 @@ namespace TextAdventure.Classes
         #endregion
 
         #region Creator Mode
-        #region Creator mode
         public static void CreatorMode()
         { // put this in its own class?
             Map map = new Map();
