@@ -4,8 +4,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        #region Initial Stuff
         bool running = true;
-        // setup
         string wargames = string.Empty;
         ScreenWriter.ConsoleWrite("What is your name? ");
         Player player = new(name: Console.ReadLine());
@@ -16,7 +16,7 @@ internal class Program
             wargames = Console.ReadLine();
             if (wargames.ToLower() is "gtw" or "global thermonuclear war")
             {
-                InputHandler.CreatorMode();
+                CreationMode.CreateStuff();
             }
             else if (wargames.ToLower() is "no" or "n")
             {
@@ -26,23 +26,23 @@ internal class Program
         }
         Console.Clear();
         Map map = GameSetUp();
-
         bool firstLook = true;
-        // Main loop
+        #endregion
+        #region Main Loop
         while (running)
         {
             try
             {
                 if (firstLook)
                 {
-                    Console.WriteLine(map.CurrentRoom.Description);
+                    Console.WriteLine("'help' for a list of commands.");
+                    ScreenWriter.ConsoleWriteLine(map.CurrentRoom.Description);
                     firstLook = false;
                 }
-                // Input handler starting to work out!
                 string userInput = Console.ReadLine();
-                if (userInput == null || userInput == "")
+                if (userInput == null || userInput.Trim() == "")
                 {
-                    ScreenWriter.ConsoleWrite("Please say something. ");
+                    ScreenWriter.ConsoleWrite("Please say something. 'help' for list of commands. ");
                     continue;
                 }
                 InputHandler.GetOutcome(userInput, ref player, ref map, ref running);
@@ -52,8 +52,9 @@ internal class Program
                 ScreenWriter.ConsoleWriteLine(ex.Message);
             }
         }
+        #endregion
     }
-    #region Creation and setup
+    #region Setup and Map Logic
     public static Map GameSetUp()
     {
         Map map = new();

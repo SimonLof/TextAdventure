@@ -18,14 +18,23 @@
         {
             ScreenWriter.ConsoleWrite(Riddle, 20);
             string userAnswer = Console.ReadLine();
+            bool correct = false;
             foreach (var answer in Answers)
             {
                 if (answer.ToLower() == userAnswer.ToLower())
                 {
-                    ScreenWriter.ConsoleWriteLine("Correct! You are rewarded with " + Item.AllItems.SingleOrDefault(i => i.Id == ItemRewardId).Name + "!");
-                    AddItemToInventoryEffect addItemToInventoryEffect = new(ItemRewardId);
-                    addItemToInventoryEffect.DoEffect();
+                    correct = true;
                 }
+            }
+            if (correct)
+            {
+                ScreenWriter.ConsoleWriteLine("Correct! You are rewarded with " + Item.AllItems.SingleOrDefault(i => i.Id == ItemRewardId).Name + "!");
+                AddItemToInventoryEffect addItemToInventoryEffect = new(ItemRewardId);
+                addItemToInventoryEffect.DoEffect();
+            }
+            else
+            {
+                ScreenWriter.ConsoleWriteLine("Incorrect!");
             }
         }
     }
