@@ -227,7 +227,7 @@ namespace TextAdventure.Classes
         public static void CreatorMode()
         { // put this in its own class?
             Map map = new Map();
-            FileHandler.GetAllItems(map); ;
+            FileHandler.GetAllItems(); ;
             string userInput = "";
             while (userInput != "q")
             {

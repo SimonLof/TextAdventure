@@ -78,7 +78,7 @@ internal class Program
             map.AddRoom(room);
         }
         map.CurrentRoom = map.MapLayout[0];
-        FileHandler.GetAllItems(map);
+        FileHandler.GetAllItems();
         return map;
     }
     private static Facing InvertFacing(Facing facing)

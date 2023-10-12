@@ -21,9 +21,9 @@ namespace TextAdventure.Classes
                     {
                         while (!reader.EndOfStream)
                         {
-                            List<string> roomProps = reader.ReadLine().Split(",").ToList();
-                            List<string> itemIds = roomProps[3].Split("§").ToList();
-                            Room room = new(roomProps[0], roomProps[1], roomProps[2], itemIds.Select(i => int.Parse(i)).ToList());
+                            List<string> roomProperties = reader.ReadLine().Split(",").ToList();
+                            List<string> itemIds = roomProperties[3].Split("§").ToList();
+                            Room room = new(roomProperties[0], roomProperties[1], roomProperties[2], itemIds.Select(i => int.Parse(i)).ToList());
                             rooms.Add(room);
                         }
                     }
@@ -39,7 +39,7 @@ namespace TextAdventure.Classes
             catch { return rooms; }
         }
 
-        public static List<Item> GetAllItems(Map map)
+        public static List<Item> GetAllItems()
         {
             List<Item> items = new();
             try
@@ -55,26 +55,30 @@ namespace TextAdventure.Classes
                             string[] effects = line[3].Split("§");
                             for (int i = 0; i < effects.Length; i++)
                             {
-                                string[] nameAndVariable = effects[i].Split("$");
-                                switch (nameAndVariable[0])
+                                string[] effectNameAndVariable = effects[i].Split("$");
+                                switch (effectNameAndVariable[0])
                                 {
                                     case "show_text":
-                                        item.ItemEffects.Add(new ShowTextEffect(nameAndVariable[1]));
+                                        item.ItemEffects.Add(new ShowTextEffect(effectNameAndVariable[1]));
                                         break;
                                     case "unlock":
-                                        item.ItemEffects.Add(new UnlockEffect(map));
+                                        item.ItemEffects.Add(new UnlockEffect());
                                         break;
                                     case "add_item_inv":
-                                        item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(nameAndVariable[1])));
+                                        item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
                                         break;
                                     case "add_item_room":
-                                        item.ItemEffects.Add(new AddItemToRoomEffect(int.Parse(nameAndVariable[1])));
+                                        item.ItemEffects.Add(new AddItemToRoomEffect(int.Parse(effectNameAndVariable[1])));
                                         break;
                                     case "remove_item_inv":
-                                        item.ItemEffects.Add(new RemoveItemFromInventoryEffect(int.Parse(nameAndVariable[1])));
+                                        item.ItemEffects.Add(new RemoveItemFromInventoryEffect(int.Parse(effectNameAndVariable[1])));
                                         break;
                                     case "remove_item_room":
-                                        item.ItemEffects.Add(new RemoveItemFromRoomEffect(int.Parse(nameAndVariable[1])));
+                                        item.ItemEffects.Add(new RemoveItemFromRoomEffect(int.Parse(effectNameAndVariable[1])));
+                                        break;
+                                    case "ask_riddle":
+                                        string[] riddleAnswers = effectNameAndVariable[3].Split('@');
+                                        item.ItemEffects.Add(new AskARiddleEffect(int.Parse(effectNameAndVariable[1]), effectNameAndVariable[2], riddleAnswers));
                                         break;
                                 }
                             }
