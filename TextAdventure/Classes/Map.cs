@@ -4,10 +4,12 @@
     {
         public List<Room> MapLayout { get; set; }
         public Room CurrentRoom { get; set; }
+        public static Map TheMap { get; set; }
 
         public Map()
         {
             MapLayout = new List<Room>();
+            TheMap = this;
         }
         public void AddRoom(Room room)
         {

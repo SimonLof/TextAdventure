@@ -56,7 +56,6 @@ internal class Program
     #region Creation and setup
     public static Map GameSetUp()
     {
-        FileHandler.GetAllItems();
         Map map = new();
         Random random = new(Environment.TickCount);
         List<Room> rooms = FileHandler.GetRooms();
@@ -79,6 +78,7 @@ internal class Program
             map.AddRoom(room);
         }
         map.CurrentRoom = map.MapLayout[0];
+        FileHandler.GetAllItems(map);
         return map;
     }
     private static Facing InvertFacing(Facing facing)
