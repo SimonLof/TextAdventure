@@ -1,4 +1,6 @@
-﻿namespace TextAdventure.Classes
+﻿using TextAdventure.Classes.EffectClasses;
+
+namespace TextAdventure.Classes
 {
     public static class InputHandler
     {
@@ -23,6 +25,29 @@
                         }
                         else
                             ScreenWriter.ConsoleWriteLine("Aborted quit.", 0);
+                        break;
+                    case "use":
+                        if (numberOfCommands > 1)
+                        {
+                            foreach (Item item in player.Inventory)
+                            {
+                                if (item.Name.ToLower() == inputCommands[1])
+                                {
+                                    try
+                                    {
+                                        foreach (Effect effect in item.ItemEffects)
+                                        {
+                                            effect.DoEffect();
+                                        }
+                                        break;
+                                    }
+                                    catch
+                                    {
+                                        ScreenWriter.ConsoleWriteLine("Can't use " + inputCommands[1]);
+                                    }
+                                }
+                            }
+                        }
                         break;
                     case "go":
                         if (numberOfCommands > 1)
@@ -198,9 +223,11 @@
         }
         #endregion
 
+        #region Creator Mode
         public static void CreatorMode()
-        { // put this in its own class
-            FileHandler.GetAllItems();
+        { // put this in its own class?
+            Map map = new Map();
+            FileHandler.GetAllItems(map); ;
             string userInput = "";
             while (userInput != "q")
             {
@@ -241,7 +268,6 @@
                         {
                             Console.WriteLine(ex.Message);
                         }
-                        // code for item creation
                         break;
                     case "a":
                         try
@@ -257,6 +283,8 @@
             }
             ScreenWriter.ConsoleWrite("Quitting creator mode");
             ScreenWriter.ConsoleWriteLine(".......", 250);
+            Console.WriteLine("Restart the app to make sure added things get loaded correctly.");
         }
+        #endregion
     }
 }
