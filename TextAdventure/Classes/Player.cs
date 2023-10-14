@@ -2,10 +2,9 @@
 
 namespace TextAdventure.Classes
 {
-    public class Player
+    public class Player : BaseObject
     {
         // Player class, hold all items, should be the center of all actions.
-        public string Name { get; set; }
         public List<Item> Inventory { get; set; }
         public static Player ThePlayer { get; set; }
 
@@ -13,6 +12,8 @@ namespace TextAdventure.Classes
         {
             Name = name;
             Inventory = new List<Item>();
+            Description = "It's you";
+            DetailedDescription = "What are you looking at?";
             ThePlayer = this;
         }
         public void PickUpItem(Item item)

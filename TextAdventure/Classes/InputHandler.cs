@@ -35,21 +35,7 @@ namespace TextAdventure.Classes
                         GetItem(player, map, inputCommands);
                         break;
                     case "drop":
-                        List<Effect> effects = new List<Effect>();
-                        if (inputCommands.Count > 1)
-                        {
-                            Item item = player.Inventory.FirstOrDefault(i => i.Name.ToLower() == inputCommands[1].ToLower());
-                            if (item != null)
-                            {
-                                effects.Add(new RemoveItemFromInventoryEffect(item.Id));
-                                effects.Add(new AddItemToRoomEffect(item.Id));
-                                effects.Add(new ShowTextEffect($"You dropped {item.Name} on the floor of the {map.CurrentRoom.Name}."));
-                            }
-                            else { effects.Add(new ShowTextEffect($"Nothing named {inputCommands[1]} in inventory.")); }
-                        }
-                        else { effects.Add(new ShowTextEffect("Drop what?")); }
-                        foreach (var effect in effects)
-                            effect.DoEffect();
+                        DropItem(player, map, inputCommands);
                         break;
                     case "inv":
                         CheckInventory(player);
@@ -69,6 +55,25 @@ namespace TextAdventure.Classes
                 Console.WriteLine(ex.Message);
                 FileHandler.LogError(ex);
             }
+        }
+
+        private static void DropItem(Player player, Map map, List<string> inputCommands)
+        {
+            List<Effect> effects = new List<Effect>();
+            if (inputCommands.Count > 1)
+            {
+                Item item = player.Inventory.FirstOrDefault(i => i.Name.ToLower() == inputCommands[1].ToLower());
+                if (item != null)
+                {
+                    effects.Add(new RemoveItemFromInventoryEffect(item.Id));
+                    effects.Add(new AddItemToRoomEffect(item.Id));
+                    effects.Add(new ShowTextEffect($"You dropped {item.Name} on the floor of the {map.CurrentRoom.Name}."));
+                }
+                else { effects.Add(new ShowTextEffect($"Nothing named {inputCommands[1]} in inventory.")); }
+            }
+            else { effects.Add(new ShowTextEffect("Drop what?")); }
+            foreach (var effect in effects)
+                effect.DoEffect();
         }
 
         private static bool Quit(bool running)
@@ -151,16 +156,64 @@ namespace TextAdventure.Classes
         { // Probably some way to do this way better.
             if (inputCommands.Count > 1)
             {
-                BaseObject lookingAt = player.Inventory.FirstOrDefault(i => i.Name.ToLower().Equals(inputCommands[1].ToLower()));
+                BaseObject? lookingAt = player.Inventory.FirstOrDefault(i => i.Name.ToLower().Equals(inputCommands[1].ToLower()));
                 //?? map.CurrentRoom.GetItemsInRoom().FirstOrDefault(i => i.Name.ToLower().Equals(inputCommands[1].ToLower()));   <-- Remove ; from row above and add this back if wanting to be able to examine items not in inventory.
                 if (lookingAt == null)
-                { lookingAt = map.CurrentRoom.Doors.FirstOrDefault(d => d.Name.ToLower() == inputCommands[1].ToLower()); }
+                {
+                    if (inputCommands[1].ToLower() is "door" or "exit" && map.CurrentRoom.Doors.Count == 1)
+                    {
+                        lookingAt = map.CurrentRoom.Doors[0];
+                    }
+                    else
+                    {
+                        if (inputCommands.Count > 2)
+                        {
+                            Facing? facing = null;
+                            switch (inputCommands[2].ToLower())
+                            {
+                                case "north":
+                                    facing = Facing.North;
+                                    break;
+                                case "south":
+                                    facing = Facing.South;
+                                    break;
+                                case "east":
+                                    facing = Facing.East;
+                                    break;
+                                case "west":
+                                    facing = Facing.West;
+                                    break;
+                            }
+
+                            lookingAt = map.CurrentRoom.Doors.SingleOrDefault(d =>
+                            d.Name.ToLower() == inputCommands[1].ToLower() &&
+                            d.Direction == facing);
+                        }
+                    }
+                }
                 if (lookingAt == null)
                 { lookingAt = "room" == inputCommands[1].ToLower() ? map.CurrentRoom : null; }
                 if (lookingAt == null)
-                { ScreenWriter.ConsoleWriteLine($"Nothing here named {inputCommands[1]}."); }
+                {
+                    lookingAt = (inputCommands[1].ToLower() is "yourself" or "myself" or "me" || 
+                                 inputCommands[1].ToLower() == player.Name.ToLower()) ?
+                                 player : null;
+                }
+                if (lookingAt == null)
+                {
+                    ScreenWriter.ConsoleWrite($"Nothing here named");
+                    for (int i = 1; i < inputCommands.Count; i++)
+                        ScreenWriter.ConsoleWrite($" {inputCommands[i]}");
+                    ScreenWriter.ConsoleWriteLine(".");
+                }
                 else
-                { ScreenWriter.ConsoleWriteLine($"{lookingAt.Name} - {lookingAt.DetailedDescription}."); }
+                {
+                    ScreenWriter.ConsoleWriteLine($"{lookingAt.Name[0..1].ToUpper()}{lookingAt.Name[1..]} - {lookingAt.DetailedDescription}");
+                    if (lookingAt.Name.ToLower() == "door")
+                    {
+                        ScreenWriter.ConsoleWriteLine("The door is " + ((lookingAt as Door).Locked ? "locked" : "unlocked") + ".");
+                    }
+                }
             }
             else
             {

@@ -1,15 +1,13 @@
 ﻿using TextAdventure.Classes;
+using TextAdventure.Classes.EffectClasses;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        #region Initial Stuff
         bool running = true;
+        #region Initial Stuff
         string wargames = string.Empty;
-        ScreenWriter.ConsoleWrite("What is your name? ");
-        Player player = new(name: Console.ReadLine());
-        ScreenWriter.ConsoleWriteLine("....", 250);
         while (wargames.ToLower() != "y" && wargames.ToLower() != "yes")
         {
             ScreenWriter.ConsoleWrite("Shall we play a game? ");
@@ -24,6 +22,11 @@ internal class Program
                 break;
             }
         }
+        FancyIntro();
+        ScreenWriter.ConsoleWrite("What is your name? ");
+        Player player = new(name: Console.ReadLine());
+        ScreenWriter.ConsoleWriteLine("....", 250);
+
         Console.Clear();
         Map map = GameSetUp();
         bool firstLook = true;
@@ -53,6 +56,20 @@ internal class Program
             }
         }
         #endregion
+    }
+
+    private static void FancyIntro()
+    {
+        Console.Clear();
+        Thread.Sleep(1000);
+        Console.BackgroundColor = ConsoleColor.Black;
+        Console.ForegroundColor = ConsoleColor.Red;
+        ScreenWriter.ConsoleWrite(".... What a terrible night....", 20);
+        Thread.Sleep(2000);
+        LightningEffect lightningEffect = new();
+        lightningEffect.DoEffect();
+        Thread.Sleep(1000);
+        Console.ForegroundColor = ConsoleColor.White;
     }
     #region Setup and Map Logic
     public static Map GameSetUp()
