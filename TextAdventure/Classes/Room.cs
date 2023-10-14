@@ -20,9 +20,8 @@
 
         public List<Item> GetItemsInRoom()
         {
-            List<Item> items = Item.AllItems;
             List<Item> result = new();
-            foreach (Item item in items)
+            foreach (Item item in Item.AllItems)
             {
                 if (ItemsById.Contains(item.Id))
                 {

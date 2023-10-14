@@ -34,6 +34,23 @@ namespace TextAdventure.Classes
                     case "get":
                         GetItem(player, map, inputCommands);
                         break;
+                    case "drop":
+                        List<Effect> effects = new List<Effect>();
+                        if (inputCommands.Count > 1)
+                        {
+                            Item item = player.Inventory.FirstOrDefault(i => i.Name.ToLower() == inputCommands[1].ToLower());
+                            if (item != null)
+                            {
+                                effects.Add(new RemoveItemFromInventoryEffect(item.Id));
+                                effects.Add(new AddItemToRoomEffect(item.Id));
+                                effects.Add(new ShowTextEffect($"You dropped {item.Name} on the floor of the {map.CurrentRoom.Name}."));
+                            }
+                            else { effects.Add(new ShowTextEffect($"Nothing named {inputCommands[1]} in inventory.")); }
+                        }
+                        else { effects.Add(new ShowTextEffect("Drop what?")); }
+                        foreach (var effect in effects)
+                            effect.DoEffect();
+                        break;
                     case "inv":
                         CheckInventory(player);
                         break;
@@ -160,7 +177,7 @@ namespace TextAdventure.Classes
                 {
                     ScreenWriter.ConsoleWriteLine($"A door facing {door.Direction}.");
                 }
-                ScreenWriter.ConsoleWriteLine($"{map.CurrentRoom.Name}  - {map.CurrentRoom.DetailedDescription}.");
+                ScreenWriter.ConsoleWriteLine($"{map.CurrentRoom.Name}  - {map.CurrentRoom.Description}.");
                 List<Item> items = map.CurrentRoom.GetItemsInRoom();
                 if (items.Count > 0)
                 {
