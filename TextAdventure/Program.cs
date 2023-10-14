@@ -12,9 +12,26 @@ internal class Program
         ScreenWriter.ConsoleWrite("What is your name? ");
         Player player = new(name: Console.ReadLine());
         ScreenWriter.ConsoleWriteLine("....", 250);
+        Map map = GameSetUp();
+        /////////////////////////// Test
+
+        List<Effect> effects = new List<Effect>()
+        {
+            new ShowTextEffect("You combined " +
+                               Item.AllItems.SingleOrDefault(i => i.Id == 6).Name + " and " +
+                               Item.AllItems.SingleOrDefault(i => i.Id == 5).Name + " to get " +
+                               Item.AllItems.SingleOrDefault(i => i.Id == 2).Name + "!") ,
+            new RemoveItemFromInventoryEffect(6),
+            new RemoveItemFromInventoryEffect(5),
+            new AddItemToInventoryEffect(2)
+        };
+        ItemInteraction itemInteractionTest = new(6, 5, effects);
+
+
+
+        /////////////////////////// End test
 
         Console.Clear();
-        Map map = GameSetUp();
         bool firstLook = true;
         #endregion
         #region Main Loop
@@ -71,12 +88,18 @@ internal class Program
         Thread.Sleep(1000);
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.Red;
-        ScreenWriter.ConsoleWrite(".... What a terrible night....", 20);
+        string introText1 = "....What a terrible night....";
+        string introText2 = "....To have a curse....";
+        Console.SetCursorPosition((Console.WindowWidth / 2) - introText1.Length / 2, Console.WindowHeight / 3);
+        ScreenWriter.ConsoleWrite(introText1, 20);
+        Thread.Sleep(3000);
+        Console.SetCursorPosition((Console.WindowWidth / 2) - introText2.Length / 2, (Console.WindowHeight / 3) * 2);
+        ScreenWriter.ConsoleWrite(introText2,40);
         Thread.Sleep(2000);
         LightningEffect lightningEffect = new();
         lightningEffect.DoEffect();
         Thread.Sleep(1000);
-        Console.ForegroundColor = ConsoleColor.White;
+        Console.ForegroundColor = ConsoleColor.Gray;
     }
     #region Setup and Map Logic
     public static Map GameSetUp()

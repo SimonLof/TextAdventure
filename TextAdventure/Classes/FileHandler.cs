@@ -68,6 +68,9 @@ namespace TextAdventure.Classes
                                             case "unlock":
                                                 item.ItemEffects.Add(new UnlockEffect());
                                                 break;
+                                            case "win":
+                                                item.ItemEffects.Add(new WinTheGameEffect());
+                                                break;
                                             case "add_item_inv":
                                                 item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
                                                 break;
@@ -81,8 +84,12 @@ namespace TextAdventure.Classes
                                                 item.ItemEffects.Add(new RemoveItemFromRoomEffect(int.Parse(effectNameAndVariable[1])));
                                                 break;
                                             case "ask_riddle":
-                                                string[] riddleAnswers = effectNameAndVariable[3].Split('@');
-                                                item.ItemEffects.Add(new AskARiddleEffect(int.Parse(effectNameAndVariable[1]), effectNameAndVariable[2], riddleAnswers));
+                                                string[] riddleAnswers = effectNameAndVariable[2].Split('@');
+                                                item.ItemEffects.Add(new AskARiddleEffect(effectNameAndVariable[1],
+                                                                                          riddleAnswers,
+                                                                                          effectNameAndVariable[3],
+                                                                                          int.Parse(effectNameAndVariable[4]) > 0,
+                                                                                          int.Parse(effectNameAndVariable[5])));
                                                 break;
                                         }
                                     }

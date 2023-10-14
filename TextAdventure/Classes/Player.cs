@@ -13,7 +13,7 @@ namespace TextAdventure.Classes
             Name = name;
             Inventory = new List<Item>();
             Description = "It's you";
-            DetailedDescription = "What are you looking at?";
+            DetailedDescription = "Your clothes are ripped and covered in blood... What happened...";
             ThePlayer = this;
         }
         public void PickUpItem(Item item)

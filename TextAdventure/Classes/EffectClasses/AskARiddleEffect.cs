@@ -6,15 +6,17 @@
         public string Riddle { get; set; }
         public string RiddleRewardString { get; set; }
         public string[] Answers { get; set; }
-        public bool Usable { get; set; } = false;
+        public bool Usable { get; set; } = true;
         public bool Correct { get; set; } = false;
+        public bool DestroyItemAfterCorrect { get; set; } = true;
 
-        public AskARiddleEffect(string riddle, string[] answers, string rewardString, int itemRewardId = 999)
+        public AskARiddleEffect(string riddle, string[] answers, string rewardString, bool destroyItemAfterCorrect, int itemRewardId = 999)
         {
             Name = "ask_riddle";
             Riddle = riddle;
             Answers = answers;
             RiddleRewardString = rewardString;
+            DestroyItemAfterCorrect = destroyItemAfterCorrect;
             ItemRewardId = itemRewardId;
         }
 
@@ -22,7 +24,7 @@
         {
             ScreenWriter.ConsoleWrite(Riddle, 20);
             string userAnswer = Console.ReadLine();
-            if (!Usable)
+            if (Usable)
             {
                 foreach (var answer in Answers)
                 {

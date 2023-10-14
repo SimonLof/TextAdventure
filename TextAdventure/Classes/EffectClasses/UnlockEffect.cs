@@ -17,6 +17,11 @@
                 ShowTextEffect someText = new(Door.Name + " unlocked!");
                 someText.DoEffect();
             }
+            else
+            {
+                ShowTextEffect text = new("Nothing to unlock in here.");
+                text.DoEffect();
+            }
         }
     }
 }

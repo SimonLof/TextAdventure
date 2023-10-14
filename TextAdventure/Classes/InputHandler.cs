@@ -98,24 +98,82 @@ namespace TextAdventure.Classes
                     if (item.Name.ToLower() == inputCommands[1])
                     {
                         itemFound = true;
-                        try
+                        if (inputCommands.Count > 2)
                         {
-                            if (item.ItemEffects.Count > 0)
+                            try
                             {
-                                foreach (Effect effect in item.ItemEffects)
+                                if (inputCommands[2].ToLower() == "on")
                                 {
-                                    effect.DoEffect();
+                                    if (inputCommands.Count > 3)
+                                    {
+                                        Item firstItem = player.Inventory.SingleOrDefault(i => i.Name.ToLower() == inputCommands[1].ToLower());
+                                        Item secondItem = player.Inventory.SingleOrDefault(i => i.Name.ToLower() == inputCommands[3].ToLower());
+                                        if (secondItem != null && firstItem != null)
+                                        {
+                                            if (ItemInteraction.InteractionExists(firstItem, secondItem))
+                                            {
+                                                ItemInteraction interaction = ItemInteraction.AllInteractions.SingleOrDefault(i =>
+                                                                                      (i.FirstItemId == firstItem.Id && i.SecondItemId == secondItem.Id) ||
+                                                                                      (i.FirstItemId == secondItem.Id && i.SecondItemId == firstItem.Id));
+                                                interaction.CombineEffect();
+                                                break;
+                                            }
+                                            else
+                                                ScreenWriter.ConsoleWriteLine($"Can't use {inputCommands[1]} with {inputCommands[3]}.");
+                                        }
+                                        else if (firstItem != null && inputCommands[3].ToLower() is "door" or "exit")
+                                        {
+                                            if (firstItem.Name.ToLower() == "key")
+                                            {
+                                                firstItem.ItemEffects.SingleOrDefault(e => e.Name == "unlock").DoEffect();
+                                            }
+                                            else
+                                            {
+                                                ScreenWriter.ConsoleWriteLine($"Can't use {inputCommands[1]} on {inputCommands[3]}.");
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ScreenWriter.ConsoleWriteLine($"{inputCommands[3]} not found in inventory.");
+                                        }
+                                    }
                                 }
+                                else
+                                    ScreenWriter.ConsoleWriteLine("I don't understand... Use 'help' for valid commands.");
                             }
-                            else
-                                ScreenWriter.ConsoleWriteLine($"Can't use {inputCommands[1]}.");
-                            break;
+                            catch (Exception ex)
+                            {
+                                FileHandler.LogError(ex);
+                            }
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            FileHandler.LogError(ex);
+                            try
+                            {
+                                if (item.ItemEffects.Count > 0)
+                                {
+                                    foreach (Effect effect in item.ItemEffects)
+                                    {
+                                        effect.DoEffect(); // Make sure to put askriddle effect early.
+                                        if (effect is AskARiddleEffect)
+                                        {
+                                            if ((effect as AskARiddleEffect).Correct && (effect as AskARiddleEffect).DestroyItemAfterCorrect)
+                                            {
+                                                RemoveItemFromInventoryEffect removeItem = new(item.Id);
+                                                removeItem.DoEffect();
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                    ScreenWriter.ConsoleWriteLine($"Can't use {inputCommands[1]}.");
+                                break;
+                            }
+                            catch (Exception ex)
+                            {
+                                FileHandler.LogError(ex);
+                            }
                         }
-
                     }
                 }
                 if (!itemFound) { ScreenWriter.ConsoleWriteLine($"Couldn't find {inputCommands[1]}."); }
@@ -195,7 +253,7 @@ namespace TextAdventure.Classes
                 { lookingAt = "room" == inputCommands[1].ToLower() ? map.CurrentRoom : null; }
                 if (lookingAt == null)
                 {
-                    lookingAt = (inputCommands[1].ToLower() is "yourself" or "myself" or "me" || 
+                    lookingAt = (inputCommands[1].ToLower() is "yourself" or "myself" or "me" ||
                                  inputCommands[1].ToLower() == player.Name.ToLower()) ?
                                  player : null;
                 }
