@@ -7,6 +7,8 @@
         public string Description { get; set; } = "The frequency of the beep, ranging from 37 to 32767 hertz.\n" +
                                                   "The duration of the beep is measured in milliseconds.";
 
+        // Göra lite basmetoder / enums för skalor eller vissa ljud så att det är enklare att använda ljudeffekten.
+
         public SoundEffect(int frequency = 200, int duration = 200)
         {
             Frequency = frequency;
