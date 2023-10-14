@@ -7,21 +7,7 @@ internal class Program
     {
         bool running = true;
         #region Initial Stuff
-        string wargames = string.Empty;
-        while (wargames.ToLower() != "y" && wargames.ToLower() != "yes")
-        {
-            ScreenWriter.ConsoleWrite("Shall we play a game? ");
-            wargames = Console.ReadLine();
-            if (wargames.ToLower() is "gtw" or "global thermonuclear war")
-            {
-                CreationMode.CreateStuff();
-            }
-            else if (wargames.ToLower() is "no" or "n")
-            {
-                running = false;
-                break;
-            }
-        }
+        running = StupidIntro(running);
         FancyIntro();
         ScreenWriter.ConsoleWrite("What is your name? ");
         Player player = new(name: Console.ReadLine());
@@ -56,6 +42,27 @@ internal class Program
             }
         }
         #endregion
+    }
+
+    private static bool StupidIntro(bool running)
+    {
+        string wargames = string.Empty;
+        while (wargames.ToLower() != "y" && wargames.ToLower() != "yes")
+        {
+            ScreenWriter.ConsoleWrite("Shall we play a game? ");
+            wargames = Console.ReadLine();
+            if (wargames.ToLower() is "gtw" or "global thermonuclear war")
+            {
+                CreationMode.CreateStuff();
+            }
+            else if (wargames.ToLower() is "no" or "n")
+            {
+                running = false;
+                break;
+            }
+        }
+
+        return running;
     }
 
     private static void FancyIntro()
