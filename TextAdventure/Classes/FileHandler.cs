@@ -44,54 +44,69 @@ namespace TextAdventure.Classes
             List<Item> items = new();
             try
             {
-                using (reader = new(ItemsFilePath))
+                if (File.Exists(ItemsFilePath))
                 {
-                    while (!reader.EndOfStream)
+                    using (reader = new(ItemsFilePath))
                     {
-                        string[] line = reader.ReadLine().Split(',');
-                        Item item = new(line[0], line[1], line[2]);
-                        if (line.Length > 3)
+                        while (!reader.EndOfStream)
                         {
-                            try
+                            string[] line = reader.ReadLine().Split(',');
+                            Item item = new(line[0], line[1], line[2]);
+                            if (line.Length > 3)
                             {
-                                string[] effects = line[3].Split("§");
-                                for (int i = 0; i < effects.Length; i++)
+                                try
                                 {
-                                    string[] effectNameAndVariable = effects[i].Split("$");
-                                    switch (effectNameAndVariable[0])
+                                    string[] effects = line[3].Split("§");
+                                    for (int i = 0; i < effects.Length; i++)
                                     {
-                                        case "show_text":
-                                            item.ItemEffects.Add(new ShowTextEffect(effectNameAndVariable[1]));
-                                            break;
-                                        case "unlock":
-                                            item.ItemEffects.Add(new UnlockEffect());
-                                            break;
-                                        case "add_item_inv":
-                                            item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
-                                            break;
-                                        case "add_item_room":
-                                            item.ItemEffects.Add(new AddItemToRoomEffect(int.Parse(effectNameAndVariable[1])));
-                                            break;
-                                        case "remove_item_inv":
-                                            item.ItemEffects.Add(new RemoveItemFromInventoryEffect(int.Parse(effectNameAndVariable[1])));
-                                            break;
-                                        case "remove_item_room":
-                                            item.ItemEffects.Add(new RemoveItemFromRoomEffect(int.Parse(effectNameAndVariable[1])));
-                                            break;
-                                        case "ask_riddle":
-                                            string[] riddleAnswers = effectNameAndVariable[3].Split('@');
-                                            item.ItemEffects.Add(new AskARiddleEffect(int.Parse(effectNameAndVariable[1]), effectNameAndVariable[2], riddleAnswers));
-                                            break;
+                                        string[] effectNameAndVariable = effects[i].Split("$");
+                                        switch (effectNameAndVariable[0])
+                                        {
+                                            case "show_text":
+                                                item.ItemEffects.Add(new ShowTextEffect(effectNameAndVariable[1]));
+                                                break;
+                                            case "unlock":
+                                                item.ItemEffects.Add(new UnlockEffect());
+                                                break;
+                                            case "add_item_inv":
+                                                item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
+                                                break;
+                                            case "add_item_room":
+                                                item.ItemEffects.Add(new AddItemToRoomEffect(int.Parse(effectNameAndVariable[1])));
+                                                break;
+                                            case "remove_item_inv":
+                                                item.ItemEffects.Add(new RemoveItemFromInventoryEffect(int.Parse(effectNameAndVariable[1])));
+                                                break;
+                                            case "remove_item_room":
+                                                item.ItemEffects.Add(new RemoveItemFromRoomEffect(int.Parse(effectNameAndVariable[1])));
+                                                break;
+                                            case "ask_riddle":
+                                                string[] riddleAnswers = effectNameAndVariable[3].Split('@');
+                                                item.ItemEffects.Add(new AskARiddleEffect(int.Parse(effectNameAndVariable[1]), effectNameAndVariable[2], riddleAnswers));
+                                                break;
+                                        }
                                     }
                                 }
+                                catch (Exception ex)
+                                {
+                                    LogError(ex);
+                                }
                             }
-                            catch (Exception ex)
-                            {
-                                LogError(ex);
-                            }
+                            items.Add(item);
                         }
-                        items.Add(item);
                     }
+                }
+                else
+                { // Base items.
+                    Item keyItem = new("Key", "Small and rusty.", "A small inscription on backside of the key says 'Key for the exit'.");
+                    keyItem.ItemEffects.Add(new UnlockEffect());
+                    items.Add(keyItem);
+                    Item swordItem = new("Sword", "Old and rusty.", "You think it might break if you try to use it...");
+                    swordItem.ItemEffects.Add(new RemoveItemFromInventoryEffect(swordItem.Id));
+                    swordItem.ItemEffects.Add(new ShowTextEffect("... The sword shattered into a 1000 pieces. You cut your finger."));
+                    items.Add(swordItem);
+                    FileHandler.AddItemToFile(keyItem);
+                    FileHandler.AddItemToFile(swordItem);
                 }
             }
             catch (Exception ex)

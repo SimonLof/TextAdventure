@@ -230,14 +230,14 @@ namespace TextAdventure.Classes
                 {
                     ScreenWriter.ConsoleWriteLine($"A door facing {door.Direction}.");
                 }
-                ScreenWriter.ConsoleWriteLine($"{map.CurrentRoom.Name}  - {map.CurrentRoom.Description}.");
+                ScreenWriter.ConsoleWriteLine($"{map.CurrentRoom.Name}  - {map.CurrentRoom.Description}");
                 List<Item> items = map.CurrentRoom.GetItemsInRoom();
                 if (items.Count > 0)
                 {
                     ScreenWriter.ConsoleWriteLine("You also see some items...");
                     foreach (Item item in items)
                     {
-                        ScreenWriter.ConsoleWriteLine($"{item.Name} - {item.Description}.");
+                        ScreenWriter.ConsoleWriteLine($"{item.Name} - {item.Description}");
                     }
                 }
                 else
