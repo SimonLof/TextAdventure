@@ -10,7 +10,7 @@ namespace TextAdventure.Classes
 
         public Player(string name)
         {
-            Name = name;
+            Name = name[0..1].ToUpper() + name[1..].ToLower();
             Inventory = new List<Item>();
             Description = "It's you";
             DetailedDescription = "Your clothes are ripped and covered in blood... What happened...";

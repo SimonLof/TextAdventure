@@ -17,33 +17,33 @@ namespace TextAdventure.Classes
                 int numberOfCommands = inputCommands.Count;
                 switch (inputCommands[0].ToLower())
                 { // alla kommandon borde vara objekt...
-                    case "q":
+                    case "q" or "quit" or "exit":
                         running = Quit(running);
                         break;
-                    case "help":
+                    case "help" or "h":
                         ScreenWriter.ConsoleWriteLine("'Look' at the room your are in. 'Go <direction>' to go somewhere. 'get <item>' to pick up stuff.\n" +
-                                                      "'inv' to look at your inventory. 'examine <most things>' to take a closer look at something.\n" +
+                                                      "'inv' to look at your inventory. 'inspect <most things>' to take a closer look at something.\n" +
                                                       "'use <item>' to use an item. 'use <item> on <item>' to combine stuff. 'q' to quit.", 0);
                         break;
-                    case "use":
+                    case "use" or "u":
                         UseItem(player, inputCommands, numberOfCommands);
                         break;
-                    case "go":
+                    case "go" or "walk" or "run" or "g":
                         GoInDirection(map, inputCommands, numberOfCommands);
                         break;
-                    case "get":
+                    case "get" or "take" or "t":
                         GetItem(player, map, inputCommands);
                         break;
-                    case "drop":
+                    case "drop" or "d":
                         DropItem(player, map, inputCommands);
                         break;
-                    case "inv":
+                    case "inv" or "inventory" or "bag":
                         CheckInventory(player);
                         break;
-                    case "examine":
-                        ExamineSomething(player, map, inputCommands);
+                    case "inspect" or "examine" or "e":
+                        InspectSomething(player, map, inputCommands);
                         break;
-                    case "look":
+                    case "look" or "l":
                         LookAround(map, numberOfCommands);
                         break;
                     default:
@@ -53,7 +53,7 @@ namespace TextAdventure.Classes
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                FileHandler.LogError(ex);
+                if (ex.Message != "I don't know what you mean by that... See list of commands with 'help'.") { FileHandler.LogError(ex); }
             }
         }
 
@@ -115,7 +115,7 @@ namespace TextAdventure.Classes
                                                 ItemInteraction interaction = ItemInteraction.AllInteractions.SingleOrDefault(i =>
                                                                                       (i.FirstItemId == firstItem.Id && i.SecondItemId == secondItem.Id) ||
                                                                                       (i.FirstItemId == secondItem.Id && i.SecondItemId == firstItem.Id));
-                                                if(interaction.CombineEffects.Count > 0)
+                                                if (interaction.CombineEffects.Count > 0)
                                                 {
                                                     interaction.CombineEffect();
                                                 }
@@ -214,7 +214,7 @@ namespace TextAdventure.Classes
                 ScreenWriter.ConsoleWriteLine("Get what?");
         }
 
-        private static void ExamineSomething(Player player, Map map, List<string> inputCommands)
+        private static void InspectSomething(Player player, Map map, List<string> inputCommands)
         { // Probably some way to do this way better.
             if (inputCommands.Count > 1)
             {
@@ -359,6 +359,13 @@ namespace TextAdventure.Classes
                     ScreenWriter.ConsoleWriteLine($"Going {facing.ToString().ToLower()}...", 100);
                     map.CurrentRoom = map.CurrentRoom.Doors.Where(d => d.Direction == facing).SingleOrDefault().LeadsToo;
                     ScreenWriter.ConsoleWriteLine(map.CurrentRoom.Description);
+                    if (map.CurrentRoom.EffectOnEnter.Count > 0)
+                    {
+                        foreach (Effect effect in map.CurrentRoom.EffectOnEnter)
+                        {
+                            effect.DoEffect();
+                        }
+                    }
                 }
                 else
                 {

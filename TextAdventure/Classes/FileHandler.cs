@@ -21,9 +21,56 @@ namespace TextAdventure.Classes
                     {
                         while (!reader.EndOfStream)
                         {
-                            List<string> roomProperties = reader.ReadLine().Split(",").ToList();
-                            List<string> itemIds = roomProperties[3].Split("§").ToList();
+                            string[] roomProperties = reader.ReadLine().Split(",");
+                            string[] itemIds = roomProperties[3].Split("§");
                             Room room = new(roomProperties[0], roomProperties[1], roomProperties[2], itemIds.Select(i => int.Parse(i)).ToList());
+                            if (roomProperties.Length > 4)
+                            {
+                                List<Effect> effects = new List<Effect>();
+                                string[] effectsFromFile = roomProperties[4].Split("§");
+                                for (int i = 0; i < effectsFromFile.Length; i++)
+                                {
+                                    string[] effectNameAndVariable = effectsFromFile[i].Split("$");
+                                    switch (effectNameAndVariable[0])
+                                    {
+                                        case "show_text":
+                                            if (effectNameAndVariable.Length > 2)
+                                            {
+                                                effects.Add(new ShowTextEffect(effectNameAndVariable[1], int.Parse(effectNameAndVariable[2])));
+                                            }
+                                            else { effects.Add(new ShowTextEffect(effectNameAndVariable[1])); }
+                                            break;
+                                        case "unlock":
+                                            effects.Add(new UnlockEffect());
+                                            break;
+                                        case "win":
+                                            effects.Add(new WinTheGameEffect());
+                                            break;
+                                        case "add_item_inv":
+                                            effects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
+                                            break;
+                                        case "add_item_room":
+                                            effects.Add(new AddItemToRoomEffect(int.Parse(effectNameAndVariable[1])));
+                                            break;
+                                        case "remove_item_inv":
+                                            effects.Add(new RemoveItemFromInventoryEffect(int.Parse(effectNameAndVariable[1])));
+                                            break;
+                                        case "remove_item_room":
+                                            effects.Add(new RemoveItemFromRoomEffect(int.Parse(effectNameAndVariable[1])));
+                                            break;
+                                        case "ask_riddle":
+                                            string[] riddleAnswers = effectNameAndVariable[2].Split('@');
+                                            effects.Add(new AskARiddleEffect(effectNameAndVariable[1],
+                                                                                      riddleAnswers,
+                                                                                      effectNameAndVariable[3],
+                                                                                      int.Parse(effectNameAndVariable[4]) > 0,
+                                                                                      int.Parse(effectNameAndVariable[5])));
+                                            break;
+                                    }
+
+                                }
+                                room.EffectOnEnter = effects;
+                            }
                             rooms.Add(room);
                         }
                     }
@@ -36,7 +83,11 @@ namespace TextAdventure.Classes
                 }
                 return rooms;
             }
-            catch { return rooms; }
+            catch (Exception ex)
+            {
+                LogError(ex);
+                return rooms;
+            }
         }
 
         public static List<Item> GetAllItems()
@@ -63,7 +114,11 @@ namespace TextAdventure.Classes
                                         switch (effectNameAndVariable[0])
                                         {
                                             case "show_text":
-                                                item.ItemEffects.Add(new ShowTextEffect(effectNameAndVariable[1]));
+                                                if (effectNameAndVariable.Length > 2)
+                                                {
+                                                    item.ItemEffects.Add(new ShowTextEffect(effectNameAndVariable[1], int.Parse(effectNameAndVariable[2])));
+                                                }
+                                                else { item.ItemEffects.Add(new ShowTextEffect(effectNameAndVariable[1])); }
                                                 break;
                                             case "unlock":
                                                 item.ItemEffects.Add(new UnlockEffect());

@@ -84,7 +84,7 @@ internal class Program
         Thread.Sleep(1000);
         Console.BackgroundColor = ConsoleColor.Black;
         Console.ForegroundColor = ConsoleColor.Red;
-        string introText1 = "....What a terrible night....";
+        string introText1 = "....What a horrible night....";
         string introText2 = "....To have a curse....";
         Console.SetCursorPosition((Console.WindowWidth / 2) - introText1.Length / 2, Console.WindowHeight / 3);
         ScreenWriter.ConsoleWrite(introText1, 20);

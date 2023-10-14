@@ -1,9 +1,12 @@
-﻿namespace TextAdventure.Classes
+﻿using TextAdventure.Classes.EffectClasses;
+
+namespace TextAdventure.Classes
 {
     public class Room : BaseObject
     {
         public List<int> ItemsById { get; set; }
         public List<Door> Doors { get; set; } = new List<Door>();
+        public List<Effect> EffectOnEnter { get; set; } = new();
         public Room(string name, string description, string detailedDescription,
                     List<int> items)
         {
