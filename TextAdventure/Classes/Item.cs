@@ -19,5 +19,11 @@ namespace TextAdventure.Classes
             _id++;
             AllItems.Add(this);
         }
+
+        public static void ResetItemList()
+        {
+            AllItems.Clear();
+            _id = 0;
+        }
     }
 }

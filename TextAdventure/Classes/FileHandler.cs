@@ -50,42 +50,45 @@ namespace TextAdventure.Classes
                     {
                         string[] line = reader.ReadLine().Split(',');
                         Item item = new(line[0], line[1], line[2]);
-                        try
+                        if (line.Length > 3)
                         {
-                            string[] effects = line[3].Split("§");
-                            for (int i = 0; i < effects.Length; i++)
+                            try
                             {
-                                string[] effectNameAndVariable = effects[i].Split("$");
-                                switch (effectNameAndVariable[0])
+                                string[] effects = line[3].Split("§");
+                                for (int i = 0; i < effects.Length; i++)
                                 {
-                                    case "show_text":
-                                        item.ItemEffects.Add(new ShowTextEffect(effectNameAndVariable[1]));
-                                        break;
-                                    case "unlock":
-                                        item.ItemEffects.Add(new UnlockEffect());
-                                        break;
-                                    case "add_item_inv":
-                                        item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
-                                        break;
-                                    case "add_item_room":
-                                        item.ItemEffects.Add(new AddItemToRoomEffect(int.Parse(effectNameAndVariable[1])));
-                                        break;
-                                    case "remove_item_inv":
-                                        item.ItemEffects.Add(new RemoveItemFromInventoryEffect(int.Parse(effectNameAndVariable[1])));
-                                        break;
-                                    case "remove_item_room":
-                                        item.ItemEffects.Add(new RemoveItemFromRoomEffect(int.Parse(effectNameAndVariable[1])));
-                                        break;
-                                    case "ask_riddle":
-                                        string[] riddleAnswers = effectNameAndVariable[3].Split('@');
-                                        item.ItemEffects.Add(new AskARiddleEffect(int.Parse(effectNameAndVariable[1]), effectNameAndVariable[2], riddleAnswers));
-                                        break;
+                                    string[] effectNameAndVariable = effects[i].Split("$");
+                                    switch (effectNameAndVariable[0])
+                                    {
+                                        case "show_text":
+                                            item.ItemEffects.Add(new ShowTextEffect(effectNameAndVariable[1]));
+                                            break;
+                                        case "unlock":
+                                            item.ItemEffects.Add(new UnlockEffect());
+                                            break;
+                                        case "add_item_inv":
+                                            item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
+                                            break;
+                                        case "add_item_room":
+                                            item.ItemEffects.Add(new AddItemToRoomEffect(int.Parse(effectNameAndVariable[1])));
+                                            break;
+                                        case "remove_item_inv":
+                                            item.ItemEffects.Add(new RemoveItemFromInventoryEffect(int.Parse(effectNameAndVariable[1])));
+                                            break;
+                                        case "remove_item_room":
+                                            item.ItemEffects.Add(new RemoveItemFromRoomEffect(int.Parse(effectNameAndVariable[1])));
+                                            break;
+                                        case "ask_riddle":
+                                            string[] riddleAnswers = effectNameAndVariable[3].Split('@');
+                                            item.ItemEffects.Add(new AskARiddleEffect(int.Parse(effectNameAndVariable[1]), effectNameAndVariable[2], riddleAnswers));
+                                            break;
+                                    }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            LogError(ex);
+                            catch (Exception ex)
+                            {
+                                LogError(ex);
+                            }
                         }
                         items.Add(item);
                     }
@@ -93,7 +96,7 @@ namespace TextAdventure.Classes
             }
             catch (Exception ex)
             {
-                LogError(ex);
+                LogError(ex, "Some items may be corrupted. Check items.txt for formatting errors.");
             }
             return items;
         }
@@ -105,7 +108,50 @@ namespace TextAdventure.Classes
                 if (File.Exists(ItemsFilePath)) firstItem = "\n";
                 using (writer = new(ItemsFilePath, true))
                 {
-                    writer.Write(firstItem + item.Name + "," + item.Description + "," + item.DetailedDescription);
+                    string writeItem = string.Empty;
+                    writeItem = firstItem + item.Name + "," + item.Description + "," + item.DetailedDescription;
+                    if (item.ItemEffects.Count > 0)
+                    {
+                        string effectString = ",";
+                        foreach (var effect in item.ItemEffects)
+                        {
+                            effectString += effect.Name;
+                            switch (effect.Name)
+                            {
+                                case "show_text":
+                                    effectString += "$" + (effect as ShowTextEffect).Text;
+                                    break;
+                                case "unlock":
+                                    break;
+                                case "add_item_inv":
+                                    break;
+                                case "add_item_room":
+                                    break;
+                                case "remove_item_inv":
+                                    break;
+                                case "remove_item_room":
+                                    break;
+                                case "ask_riddle":
+                                    break;
+                            }
+                            effectString += "§";
+                        }
+                        writeItem += effectString.Substring(0, effectString.Length - 1);
+                    }
+                    writer.Write(writeItem);
+                }
+            }
+            catch (Exception ex) { LogError(ex); }
+        }
+        public static void AddItemToFile(string item)
+        {
+            try
+            {
+                string firstItem = "";
+                if (File.Exists(ItemsFilePath)) firstItem = "\n";
+                using (writer = new(ItemsFilePath, true))
+                {
+                    writer.Write(firstItem + item);
                 }
             }
             catch (Exception ex) { LogError(ex); }
@@ -139,6 +185,20 @@ namespace TextAdventure.Classes
             catch
             {
                 Console.WriteLine(ex.ToString());
+            }
+        }
+        public static void LogError(Exception ex, string optionalMessage)
+        {
+            try
+            {
+                using (writer = new(ErrorLogFilePath, true))
+                {
+                    writer.WriteLine(DateTime.Now + " " + optionalMessage + "\n" + ex.ToString());
+                }
+            }
+            catch
+            {
+                Console.WriteLine(DateTime.Now + " " + optionalMessage + "\n" + ex.ToString());
             }
         }
     }

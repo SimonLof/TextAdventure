@@ -1,14 +1,16 @@
-﻿namespace TextAdventure.Classes
+﻿using TextAdventure.Classes.EffectClasses;
+
+namespace TextAdventure.Classes
 {
     public static class CreationMode
     {
         public static void CreateStuff()
         { // put this in its own class?
             Map map = new Map();
-            FileHandler.GetAllItems();
             string userInput = "";
             while (userInput != "q")
             {
+                FileHandler.GetAllItems();
                 Console.WriteLine("Add (r)oom or add (i)tem. Map will be generated from the rooms. Get (a)ll items and their index, for room construction. (q)uit.");
                 userInput = Console.ReadLine();
                 switch (userInput)
@@ -27,6 +29,7 @@
                         }
                         catch { break; }
                 }
+                Item.ResetItemList();
             }
             ScreenWriter.ConsoleWrite("Quitting creator mode");
             ScreenWriter.ConsoleWriteLine(".......", 250);
@@ -44,10 +47,44 @@
             {
                 try
                 {
-                    List<string> itemProps = makeItem.Split(',').ToList();
-                    Item item = new(itemProps[0], itemProps[1], itemProps[2]);
-                    FileHandler.AddItemToFile(item);
-                    Console.WriteLine(item.Name + " added.");
+                    FileHandler.AddItemToFile(makeItem);
+                    Console.WriteLine(makeItem.Split(',')[0] + " added.");
+                    // *****If I make the item creation process more user friendly all this code is a starting point to make item from text.
+                    //List<string> itemProps = makeItem.Split(',').ToList();
+                    //Item item = new(itemProps[0], itemProps[1], itemProps[2]);
+                    //if (itemProps.Count > 3)
+                    //{
+                    //    string[] effects = itemProps[3].Split("§");
+                    //    for (int i = 0; i < effects.Length; i++)
+                    //    {
+                    //        string[] effectNameAndVariable = effects[i].Split("$");
+                    //        switch (effectNameAndVariable[0])
+                    //        {
+                    //            case "show_text":
+                    //                item.ItemEffects.Add(new ShowTextEffect(effectNameAndVariable[1]));
+                    //                break;
+                    //            case "unlock":
+                    //                item.ItemEffects.Add(new UnlockEffect());
+                    //                break;
+                    //            case "add_item_inv":
+                    //                item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
+                    //                break;
+                    //            case "add_item_room":
+                    //                item.ItemEffects.Add(new AddItemToRoomEffect(int.Parse(effectNameAndVariable[1])));
+                    //                break;
+                    //            case "remove_item_inv":
+                    //                item.ItemEffects.Add(new RemoveItemFromInventoryEffect(int.Parse(effectNameAndVariable[1])));
+                    //                break;
+                    //            case "remove_item_room":
+                    //                item.ItemEffects.Add(new RemoveItemFromRoomEffect(int.Parse(effectNameAndVariable[1])));
+                    //                break;
+                    //            case "ask_riddle":
+                    //                string[] riddleAnswers = effectNameAndVariable[3].Split('@');
+                    //                item.ItemEffects.Add(new AskARiddleEffect(int.Parse(effectNameAndVariable[1]), effectNameAndVariable[2], riddleAnswers));
+                    //                break;
+                    //        }
+                    //    }
+                    //}
                 }
                 catch (Exception ex)
                 {
