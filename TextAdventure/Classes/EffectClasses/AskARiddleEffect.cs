@@ -4,38 +4,52 @@
     {
         public int ItemRewardId { get; set; }
         public string Riddle { get; set; }
+        public string RiddleRewardString { get; set; }
         public string[] Answers { get; set; }
+        public bool Usable { get; set; } = false;
+        public bool Correct { get; set; } = false;
 
-        public AskARiddleEffect(int itemRewardId, string riddle, string[] answers)
+        public AskARiddleEffect(string riddle, string[] answers, string rewardString, int itemRewardId = 999)
         {
             Name = "ask_riddle";
-            ItemRewardId = itemRewardId;
             Riddle = riddle;
             Answers = answers;
+            RiddleRewardString = rewardString;
+            ItemRewardId = itemRewardId;
         }
 
         public override void DoEffect()
         {
             ScreenWriter.ConsoleWrite(Riddle, 20);
             string userAnswer = Console.ReadLine();
-            bool correct = false;
-            foreach (var answer in Answers)
+            if (!Usable)
             {
-                if (answer.ToLower() == userAnswer.ToLower())
+                foreach (var answer in Answers)
                 {
-                    correct = true;
+                    if (answer.ToLower() == userAnswer.ToLower())
+                    {
+                        Correct = true;
+                    }
+                }
+                if (Correct)
+                {
+                    ScreenWriter.ConsoleWrite("Correct!");
+                    if (ItemRewardId != 999)
+                    {
+                        ScreenWriter.ConsoleWriteLine(" You are rewarded with " + Item.AllItems.SingleOrDefault(i => i.Id == ItemRewardId).Name + "!");
+                        AddItemToInventoryEffect addItemToInventoryEffect = new(ItemRewardId);
+                        addItemToInventoryEffect.DoEffect();
+                    }
+                    ScreenWriter.ConsoleWriteLine(RiddleRewardString);
+                }
+                else
+                {
+                    ScreenWriter.ConsoleWriteLine("Incorrect!");
                 }
             }
-            if (correct)
-            {
-                ScreenWriter.ConsoleWriteLine("Correct! You are rewarded with " + Item.AllItems.SingleOrDefault(i => i.Id == ItemRewardId).Name + "!");
-                AddItemToInventoryEffect addItemToInventoryEffect = new(ItemRewardId);
-                addItemToInventoryEffect.DoEffect();
-            }
             else
-            {
-                ScreenWriter.ConsoleWriteLine("Incorrect!");
-            }
+                ScreenWriter.ConsoleWriteLine("Can't use that.");
+
         }
     }
 }
