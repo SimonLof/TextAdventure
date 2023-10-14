@@ -15,7 +15,7 @@
             Console.ForegroundColor = ConsoleColor.Red;
             string outroText1 = "....You feel yourself losing control....";
             string outroText2 = "....Everything fades to black....";
-            string outroText3 = "....What is happening....";
+            string outroText3 = "....What is happening?....";
             Console.SetCursorPosition((Console.WindowWidth / 2) - outroText1.Length / 2, Console.WindowHeight / 3);
             ScreenWriter.ConsoleWrite(outroText1, 100);
             Thread.Sleep(2000);

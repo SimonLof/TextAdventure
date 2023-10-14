@@ -115,7 +115,11 @@ namespace TextAdventure.Classes
                                                 ItemInteraction interaction = ItemInteraction.AllInteractions.SingleOrDefault(i =>
                                                                                       (i.FirstItemId == firstItem.Id && i.SecondItemId == secondItem.Id) ||
                                                                                       (i.FirstItemId == secondItem.Id && i.SecondItemId == firstItem.Id));
-                                                interaction.CombineEffect();
+                                                if(interaction.CombineEffects.Count > 0)
+                                                {
+                                                    interaction.CombineEffect();
+                                                }
+                                                else { ScreenWriter.ConsoleWriteLine("No interaction effects in interaction effect list. Complain to the programmer."); }
                                                 break;
                                             }
                                             else
@@ -154,7 +158,7 @@ namespace TextAdventure.Classes
                                 {
                                     foreach (Effect effect in item.ItemEffects)
                                     {
-                                        effect.DoEffect(); // Make sure to put askriddle effect early.
+                                        effect.DoEffect();
                                         if (effect is AskARiddleEffect)
                                         {
                                             if ((effect as AskARiddleEffect).Correct && (effect as AskARiddleEffect).DestroyItemAfterCorrect)
@@ -344,7 +348,7 @@ namespace TextAdventure.Classes
                     ScreenWriter.ConsoleWriteLine($"{item.Name} - {item.Description}.");
             }
             else
-                ScreenWriter.ConsoleWriteLine("You bag is empty.");
+                ScreenWriter.ConsoleWriteLine("Your inventory is empty.");
         }
         private static void LookForTheDoor(Map map, Facing facing)
         {

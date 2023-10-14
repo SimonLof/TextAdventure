@@ -14,23 +14,19 @@ internal class Program
         ScreenWriter.ConsoleWriteLine("....", 250);
         Map map = GameSetUp();
         /////////////////////////// Test
-
-        List<Effect> effects = new List<Effect>()
+        // Make combine effect file and load this with filehandler instead.
+        ItemInteraction itemInteractionTest = new(6, 3);
+        itemInteractionTest.CombineEffects = new List<Effect>()
         {
             new ShowTextEffect("You combined " +
-                               Item.AllItems.SingleOrDefault(i => i.Id == 6).Name + " and " +
-                               Item.AllItems.SingleOrDefault(i => i.Id == 5).Name + " to get " +
-                               Item.AllItems.SingleOrDefault(i => i.Id == 2).Name + "!") ,
-            new RemoveItemFromInventoryEffect(6),
-            new RemoveItemFromInventoryEffect(5),
-            new AddItemToInventoryEffect(2)
+                   Item.AllItems.SingleOrDefault(i => i.Id == itemInteractionTest.FirstItemId).Name + " and " +
+                   Item.AllItems.SingleOrDefault(i => i.Id == itemInteractionTest.SecondItemId).Name +
+                   " into a fancy wizard outfit that starts moving around on its own!\n...\nThe outfit burts into flames and leaves behind a book on the floor.",20), //Använder namnet för att hitta namnet... Kanske borde köra på Id.
+            new RemoveItemFromInventoryEffect(itemInteractionTest.FirstItemId),
+            new RemoveItemFromInventoryEffect(itemInteractionTest.SecondItemId),
+            new AddItemToRoomEffect((Item.AllItems.SingleOrDefault(i => i.Name.ToLower() == "book")).Id)
         };
-        ItemInteraction itemInteractionTest = new(6, 5, effects);
-
-
-
         /////////////////////////// End test
-
         Console.Clear();
         bool firstLook = true;
         #endregion
@@ -94,7 +90,7 @@ internal class Program
         ScreenWriter.ConsoleWrite(introText1, 20);
         Thread.Sleep(3000);
         Console.SetCursorPosition((Console.WindowWidth / 2) - introText2.Length / 2, (Console.WindowHeight / 3) * 2);
-        ScreenWriter.ConsoleWrite(introText2,40);
+        ScreenWriter.ConsoleWrite(introText2, 40);
         Thread.Sleep(2000);
         LightningEffect lightningEffect = new();
         lightningEffect.DoEffect();

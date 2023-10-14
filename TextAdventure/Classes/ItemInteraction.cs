@@ -6,13 +6,12 @@ namespace TextAdventure.Classes
     {
         public static List<ItemInteraction> AllInteractions { get; set; } = new List<ItemInteraction>();
         public int FirstItemId { get; set; }
-        public int SecondItemId { get; set; } // If Ids added to doors, include door Id checks in this.
-        public List<Effect> CombineEffects { get; set; }
-        public ItemInteraction(int firstItemId, int secondItemId, List<Effect> effects)
+        public int SecondItemId { get; set; }
+        public List<Effect> CombineEffects { get; set; } = new();
+        public ItemInteraction(int firstItemId, int secondItemId)
         {
             FirstItemId = firstItemId;
             SecondItemId = secondItemId;
-            CombineEffects = effects;
             AllInteractions.Add(this);
         }
         public void CombineEffect()
@@ -21,9 +20,7 @@ namespace TextAdventure.Classes
             {
                 effect.DoEffect();
             }
-            ScreenWriter.ConsoleWriteLine("Successful combination! Remove this text later.");
         }
-
         public static bool InteractionExists(Item item1, Item item2)
         {
             if (item1.Id != item2.Id)
