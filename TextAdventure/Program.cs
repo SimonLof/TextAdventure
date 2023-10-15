@@ -19,12 +19,13 @@ internal class Program
         itemInteractionTest.CombineEffects = new List<Effect>()
         {
             new ShowTextEffect("You combined " +
-                   Item.AllItems.SingleOrDefault(i => i.Id == itemInteractionTest.FirstItemId).Name + " and " +
-                   Item.AllItems.SingleOrDefault(i => i.Id == itemInteractionTest.SecondItemId).Name +
-                   " into a fancy wizard outfit that starts moving around on its own!\n...\nThe outfit burts into flames and leaves behind a book on the floor.",20), //Använder namnet för att hitta namnet... Kanske borde köra på Id.
+                   Item.GetItemFromId(itemInteractionTest.FirstItemId).Name + " and " +
+                   Item.GetItemFromId(itemInteractionTest.SecondItemId).Name +
+                   " into a fancy wizard outfit that starts moving around on its own!\n...\n" +
+                   "The outfit burts into flames and leaves behind a book on the floor.",20), //Använder namnet för att hitta namnet... Kanske borde köra på Id.
             new RemoveItemFromInventoryEffect(itemInteractionTest.FirstItemId),
             new RemoveItemFromInventoryEffect(itemInteractionTest.SecondItemId),
-            new AddItemToRoomEffect((Item.AllItems.SingleOrDefault(i => i.Name.ToLower() == "book")).Id)
+            new AddItemToRoomEffect((Item.GetItemFromName("book")).Id)
         };
         /////////////////////////// End test
         Console.Clear();

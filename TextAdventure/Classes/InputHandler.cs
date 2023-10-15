@@ -190,8 +190,7 @@ namespace TextAdventure.Classes
         {
             if (inputCommands.Count > 1)
             {
-                int[] itemIds = map.CurrentRoom.ItemsById.ToArray();
-                List<Item> roomItems = Item.AllItems.Where(i => itemIds.Contains(i.Id)).ToList();
+                List<Item> roomItems = map.CurrentRoom.GetItemsInRoom();
                 if (roomItems.Count > 0)
                 {
                     bool itemFound = false;
@@ -222,9 +221,12 @@ namespace TextAdventure.Classes
                 //?? map.CurrentRoom.GetItemsInRoom().FirstOrDefault(i => i.Name.ToLower().Equals(inputCommands[1].ToLower()));   <-- Remove ; from row above and add this back if wanting to be able to examine items not in inventory.
                 if (lookingAt == null)
                 {
-                    if (inputCommands[1].ToLower() is "door" or "exit" && map.CurrentRoom.Doors.Count == 1)
+                    if (inputCommands[1].ToLower() is "door" or "exit" && inputCommands.Count == 2) // Gör en koll att det är mer än 2 ord.
                     {
-                        lookingAt = map.CurrentRoom.Doors[0];
+                        if (map.CurrentRoom.Doors.Count == 1)
+                            lookingAt = map.CurrentRoom.Doors[0];
+                        else
+                            lookingAt = new Item("Which door?", "", "'North' 'South' 'East' 'West'");
                     }
                     else
                     {
@@ -245,11 +247,17 @@ namespace TextAdventure.Classes
                                 case "west":
                                     facing = Facing.West;
                                     break;
+                                default:
+                                    lookingAt = new Item("Which door?", "", "'North' 'South' 'East' 'West'");
+                                    break;
                             }
-
-                            lookingAt = map.CurrentRoom.Doors.SingleOrDefault(d =>
-                            d.Name.ToLower() == inputCommands[1].ToLower() &&
-                            d.Direction == facing);
+                            if (facing != null)
+                            {
+                                lookingAt = map.CurrentRoom.Doors.SingleOrDefault(d =>
+                                d.Name.ToLower() == inputCommands[1].ToLower() &&
+                                d.Direction == facing);
+                                if (lookingAt == null) { lookingAt = new Item("No door in that direction.", "", "Use 'look' to see avaliable doors."); }
+                            }
                         }
                     }
                 }

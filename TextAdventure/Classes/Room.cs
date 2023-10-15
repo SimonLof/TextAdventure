@@ -24,7 +24,7 @@ namespace TextAdventure.Classes
         public List<Item> GetItemsInRoom()
         {
             List<Item> result = new();
-            foreach (Item item in Item.AllItems)
+            foreach (Item item in Item.GetAllItems())
             {
                 if (ItemsById.Contains(item.Id))
                 {

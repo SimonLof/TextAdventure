@@ -116,7 +116,7 @@ namespace TextAdventure.Classes
 
         private static void ListItems()
         {
-            foreach (Item item in Item.AllItems)
+            foreach (Item item in Item.GetAllItems())
             {
                 ScreenWriter.ConsoleWriteLine(item.Id + " : " + item.Name + " : " + item.Description, 0);
             }

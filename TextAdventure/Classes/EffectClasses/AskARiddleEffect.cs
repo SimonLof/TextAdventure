@@ -40,7 +40,7 @@
                     ScreenWriter.ConsoleWrite("Correct!");
                     if (ItemRewardId != 999)
                     {
-                        ScreenWriter.ConsoleWriteLine(" You are rewarded with " + Item.AllItems.SingleOrDefault(i => i.Id == ItemRewardId).Name + "!");
+                        ScreenWriter.ConsoleWriteLine(" You are rewarded with " + Item.GetItemFromId(ItemRewardId).Name + "!");
                         AddItemToInventoryEffect addItemToInventoryEffect = new(ItemRewardId);
                         addItemToInventoryEffect.DoEffect();
                     }

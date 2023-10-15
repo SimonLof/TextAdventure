@@ -13,7 +13,7 @@
         {
             try
             {
-                Player.GetPlayer().DropItem(Item.AllItems.SingleOrDefault(i => i.Id == ItemToRemove));
+                Player.GetPlayer().DropItem(Item.GetItemFromId(ItemToRemove));
             }
             catch (Exception ex)
             {

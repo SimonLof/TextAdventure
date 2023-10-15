@@ -13,7 +13,7 @@
             try
             {
                 Player playerToModify = Player.GetPlayer();
-                playerToModify.PickUpItem(Item.AllItems.SingleOrDefault(i => i.Id == ItemToAdd));
+                playerToModify.PickUpItem(Item.GetItemFromId(ItemToAdd));
             }
             catch (Exception ex)
             {

@@ -4,7 +4,7 @@ namespace TextAdventure.Classes
 {
     public class Item : BaseObject
     {
-        public static List<Item> AllItems { get; set; } = new List<Item>();
+        private static List<Item> AllItems { get; set; } = new List<Item>();
         private static int _id = 0;
         public int Id { get; }
         public List<Effect> ItemEffects { get; set; }
@@ -24,6 +24,21 @@ namespace TextAdventure.Classes
         {
             AllItems.Clear();
             _id = 0;
+        }
+
+        public static Item GetItemFromId(int id)
+        {
+            return AllItems.SingleOrDefault(i => i.Id == id);
+        }
+
+        public static Item GetItemFromName(string name)
+        {
+            return AllItems.FirstOrDefault(i => i.Name.ToLower() == name.ToLower());
+        }
+
+        public static List<Item> GetAllItems()
+        {
+            return AllItems;
         }
     }
 }
