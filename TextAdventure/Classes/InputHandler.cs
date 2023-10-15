@@ -161,7 +161,7 @@ namespace TextAdventure.Classes
                                         effect.DoEffect();
                                         if (effect is AskARiddleEffect)
                                         {
-                                            if ((effect as AskARiddleEffect).Correct && (effect as AskARiddleEffect).DestroyItemAfterCorrect)
+                                            if (((AskARiddleEffect)effect).Correct && ((AskARiddleEffect)effect).DestroyItemAfterCorrect)
                                             {
                                                 RemoveItemFromInventoryEffect removeItem = new(item.Id);
                                                 removeItem.DoEffect();
@@ -281,7 +281,7 @@ namespace TextAdventure.Classes
                     ScreenWriter.ConsoleWriteLine($"{lookingAt.Name[0..1].ToUpper()}{lookingAt.Name[1..]} - {lookingAt.DetailedDescription}");
                     if (lookingAt.Name.ToLower() == "door")
                     {
-                        ScreenWriter.ConsoleWriteLine("The door is " + ((lookingAt as Door).Locked ? "locked" : "unlocked") + ".");
+                        ScreenWriter.ConsoleWriteLine("The door is " + (((Door)lookingAt).Locked ? "locked" : "unlocked") + ".");
                     }
                 }
             }
@@ -362,10 +362,10 @@ namespace TextAdventure.Classes
         {
             if (map.CurrentRoom.Doors.Any(d => d.Direction == facing))
             {
-                if (!map.CurrentRoom.Doors.Where(d => d.Direction == facing).SingleOrDefault().Locked)
+                if (!map.CurrentRoom.Doors.SingleOrDefault(d => d.Direction == facing).Locked)
                 {
                     ScreenWriter.ConsoleWriteLine($"Going {facing.ToString().ToLower()}...", 100);
-                    map.CurrentRoom = map.CurrentRoom.Doors.Where(d => d.Direction == facing).SingleOrDefault().LeadsToo;
+                    map.CurrentRoom = map.CurrentRoom.Doors.SingleOrDefault(d => d.Direction == facing).LeadsToo;
                     ScreenWriter.ConsoleWriteLine(map.CurrentRoom.Description);
                     if (map.CurrentRoom.EffectOnEnter.Count > 0)
                     {

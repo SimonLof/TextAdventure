@@ -5,7 +5,7 @@
         public static void CreateStuff()
         { // put this in its own class?
             Map map = new Map();
-            string userInput = "";
+            string? userInput = "";
             while (userInput != "q")
             {
                 FileHandler.GetAllItems();
@@ -40,8 +40,8 @@
                 "<effect_2_name>$<effect_2_variable>$<effect_2_variable_list_var_1>@<effect2_variable_list_var_2>\" \n" +
                 "Id is automatic(check id after creation), item-interaction are its own thing. Notice difference between §, $ and @. " +
                 "'e' for list of effects and explanations."); // Must follow this exactly or item will break...
-            string makeItem = Console.ReadLine();
-            if (makeItem != "")
+            string? makeItem = Console.ReadLine();
+            if (!(makeItem is "" or null))
             {
                 if (makeItem.ToLower().Trim() == "e")
                 {
@@ -114,8 +114,8 @@
         { // Effects not yet implemented in room maker.
             Console.WriteLine("\"<Name>,<Description>,<Detailed Description>,<item1>§<item2>§<item3>,<effect_1_name>$<effect_1_var>§<effect_2_name>\"" +
                 "\nIf no items just type 999.");
-            string makeRoom = Console.ReadLine();
-            if (makeRoom != "")
+            string? makeRoom = Console.ReadLine();
+            if (!(makeRoom is "" or null))
             {
                 try
                 {

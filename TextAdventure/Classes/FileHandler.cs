@@ -7,7 +7,7 @@ namespace TextAdventure.Classes
         private static readonly string RoomsFilePath = ".\\rooms.txt";
         private static readonly string ItemsFilePath = ".\\items.txt";
         private static readonly string ErrorLogFilePath = ".\\errorlog.txt";
-        private static readonly string MapFilePath = ".\\map.txt"; // Save current map to continue playing? Later project
+        //private static readonly string? MapFilePath = ".\\map.txt"; // Save current map to continue playing? Later project
         private static StreamReader? reader;
         private static StreamWriter? writer;
         public static List<Room> GetRooms()
@@ -176,22 +176,22 @@ namespace TextAdventure.Classes
         {// not done. Add items to file via string method for now.
             try
             {
-                string firstItem = "";
+                string? firstItem = "";
                 if (File.Exists(ItemsFilePath)) firstItem = "\n";
                 using (writer = new(ItemsFilePath, true))
                 {
-                    string writeItem = string.Empty;
+                    string? writeItem = string.Empty;
                     writeItem = firstItem + item.Name + "," + item.Description + "," + item.DetailedDescription;
                     if (item.ItemEffects.Count > 0)
                     {
-                        string effectString = ",";
+                        string? effectString = ",";
                         foreach (var effect in item.ItemEffects)
                         {
                             effectString += effect.Name;
                             switch (effect.Name)
                             { 
                                 case "show_text":
-                                    effectString += "$" + (effect as ShowTextEffect).Text;
+                                    effectString += "$" + ((ShowTextEffect)effect).Text;
                                     break;
                                 case "unlock":
                                     break;
@@ -219,7 +219,7 @@ namespace TextAdventure.Classes
         { // Add item to file via exact string.
             try
             {
-                string firstItem = "";
+                string? firstItem = "";
                 if (File.Exists(ItemsFilePath)) firstItem = "\n";
                 using (writer = new(ItemsFilePath, true))
                 {
@@ -232,8 +232,8 @@ namespace TextAdventure.Classes
         {
             try
             {
-                string roomItemIds = string.Empty;
-                string firstRoom = "";
+                string? roomItemIds = string.Empty;
+                string? firstRoom = "";
                 room.ItemsById.ForEach(i => roomItemIds += i.ToString() + "§");
                 roomItemIds = roomItemIds.Remove(roomItemIds.Length - 1);
                 if (File.Exists(RoomsFilePath)) firstRoom = "\n";
@@ -248,7 +248,7 @@ namespace TextAdventure.Classes
         { // Add room to file via exact string.
             try
             {
-                string firstRoom = "";
+                string? firstRoom = "";
                 if (File.Exists(RoomsFilePath)) firstRoom = "\n";
                 using (writer = new(RoomsFilePath, true))
                 {
