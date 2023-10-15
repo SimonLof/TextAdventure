@@ -20,6 +20,9 @@ namespace TextAdventure.Classes
                     case "q" or "quit" or "exit":
                         running = Quit(running);
                         break;
+                    case "whoami":
+                        ScreenWriter.ConsoleWriteLine(player.Name);
+                        break;
                     case "help" or "h":
                         ScreenWriter.ConsoleWriteLine("'Look' at the room your are in. 'Go <direction>' to go somewhere. 'get <item>' to pick up stuff.\n" +
                                                       "'inv' to look at your inventory. 'inspect <most things>' to take a closer look at something.\n" +
@@ -102,7 +105,7 @@ namespace TextAdventure.Classes
                         {
                             try
                             {
-                                if (inputCommands[2].ToLower() == "on")
+                                if (inputCommands[2].ToLower() is "on" or "with")
                                 {
                                     if (inputCommands.Count > 3)
                                     {
@@ -111,7 +114,7 @@ namespace TextAdventure.Classes
                                         if (secondItem != null && firstItem != null)
                                         {
                                             if (ItemInteraction.InteractionExists(firstItem, secondItem))
-                                            {
+                                            { // checks that the interaction between the items exists, and then finds it again.
                                                 ItemInteraction interaction = ItemInteraction.AllInteractions.SingleOrDefault(i =>
                                                                                       (i.FirstItemId == firstItem.Id && i.SecondItemId == secondItem.Id) ||
                                                                                       (i.FirstItemId == secondItem.Id && i.SecondItemId == firstItem.Id));
@@ -119,7 +122,7 @@ namespace TextAdventure.Classes
                                                 {
                                                     interaction.CombineEffect();
                                                 }
-                                                else { ScreenWriter.ConsoleWriteLine("No interaction effects in interaction effect list. Complain to the programmer."); }
+                                                else { ScreenWriter.ConsoleWriteLine("No interaction effects in interaction effect list. Complain to the developer."); }
                                                 break;
                                             }
                                             else

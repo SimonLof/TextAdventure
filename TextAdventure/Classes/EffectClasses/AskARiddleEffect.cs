@@ -22,7 +22,7 @@
 
         public override void DoEffect()
         {
-            Riddle = Riddle.Replace("{P}", Player.ThePlayer.Name); // Make a string manipulator class that can replace markers in files for variables.
+            Riddle = Riddle.Replace("{P}", Player.ThePlayer.Name); // Make a string manipulator class that can replace markers in files with variables.
             RiddleRewardString = RiddleRewardString.Replace("{P}", Player.ThePlayer.Name);
             ScreenWriter.ConsoleWrite(Riddle, 20);
             string userAnswer = Console.ReadLine();
@@ -37,10 +37,9 @@
                 }
                 if (Correct)
                 {
-                    ScreenWriter.ConsoleWrite("Correct!");
                     if (ItemRewardId != 999)
                     {
-                        ScreenWriter.ConsoleWriteLine(" You are rewarded with " + Item.GetItemFromId(ItemRewardId).Name + "!");
+                        ScreenWriter.ConsoleWriteLine("...You are rewarded with " + Item.GetItemFromId(ItemRewardId).Name + "!");
                         AddItemToInventoryEffect addItemToInventoryEffect = new(ItemRewardId);
                         addItemToInventoryEffect.DoEffect();
                     }

@@ -46,6 +46,9 @@ namespace TextAdventure.Classes
                                         case "win":
                                             effects.Add(new WinTheGameEffect());
                                             break;
+                                        case "lose":
+                                            effects.Add(new LoseTheGameEffect());
+                                            break;
                                         case "add_item_inv":
                                             effects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
                                             break;
@@ -126,6 +129,9 @@ namespace TextAdventure.Classes
                                             case "win":
                                                 item.ItemEffects.Add(new WinTheGameEffect());
                                                 break;
+                                            case "lose":
+                                                item.ItemEffects.Add(new LoseTheGameEffect());
+                                                break;
                                             case "add_item_inv":
                                                 item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
                                                 break;
@@ -189,11 +195,15 @@ namespace TextAdventure.Classes
                         {
                             effectString += effect.Name;
                             switch (effect.Name)
-                            { 
+                            {
                                 case "show_text":
                                     effectString += "$" + ((ShowTextEffect)effect).Text;
                                     break;
                                 case "unlock":
+                                    break;
+                                case "win":
+                                    break;
+                                case "lose":
                                     break;
                                 case "add_item_inv":
                                     break;
