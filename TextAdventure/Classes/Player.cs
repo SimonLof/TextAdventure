@@ -4,7 +4,6 @@ namespace TextAdventure.Classes
 {
     public class Player : BaseObject
     {
-        // Player class, hold all items, should be the center of all actions.
         public List<Item> Inventory { get; set; }
         public static Player ThePlayer { get; set; }
 
@@ -22,8 +21,10 @@ namespace TextAdventure.Classes
         }
         public void DropItem(Item item)
         {
-            //Inventory[Inventory.IndexOf(item)] = null;
-            Inventory.Remove(item);
+            if (Inventory.Contains(item))
+            {
+                Inventory.Remove(item);
+            }
         }
         public static Player GetPlayer()
         {

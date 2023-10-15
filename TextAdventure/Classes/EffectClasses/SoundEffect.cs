@@ -10,7 +10,8 @@
         // Göra lite basmetoder / enums för skalor eller vissa ljud så att det är enklare att använda ljudeffekten.
 
         public SoundEffect(int frequency = 200, int duration = 200)
-        {
+        {//Not yet fully implemented.
+            Name = "beep";
             Frequency = frequency;
             Duration = duration;
         }

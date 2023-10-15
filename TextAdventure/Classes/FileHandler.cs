@@ -159,16 +159,11 @@ namespace TextAdventure.Classes
                     }
                 }
                 else
-                { // Base items.
-                    Item keyItem = new("Key", "Small and rusty.", "A small inscription on backside of the key says 'Key for the exit'.");
-                    keyItem.ItemEffects.Add(new UnlockEffect());
-                    items.Add(keyItem);
-                    Item swordItem = new("Sword", "Old and rusty.", "You think it might break if you try to use it...");
-                    swordItem.ItemEffects.Add(new RemoveItemFromInventoryEffect(swordItem.Id));
-                    swordItem.ItemEffects.Add(new ShowTextEffect("... The sword shattered into a 1000 pieces. You cut your finger."));
-                    items.Add(swordItem);
-                    FileHandler.AddItemToFile(keyItem);
-                    FileHandler.AddItemToFile(swordItem);
+                { // Base items added via exact string.
+                    FileHandler.AddItemToFile("Key,Old rusty key,You think it might open the exit door...,unlock");
+                    FileHandler.AddItemToFile("Club,Blunt and made of metal,Pretty rusty. Might break after using.," +
+                        "remove_item_inv$5§show_text$The handle breaks in half and the head of the club falls off " +
+                        "and breaks when hitting the ground. It's now unusable. You throw away the scraps.");
                 }
             }
             catch (Exception ex)
@@ -178,7 +173,7 @@ namespace TextAdventure.Classes
             return items;
         }
         public static void AddItemToFile(Item item)
-        {
+        {// not done. Add items to file via string method for now.
             try
             {
                 string firstItem = "";
@@ -194,7 +189,7 @@ namespace TextAdventure.Classes
                         {
                             effectString += effect.Name;
                             switch (effect.Name)
-                            {
+                            { 
                                 case "show_text":
                                     effectString += "$" + (effect as ShowTextEffect).Text;
                                     break;
@@ -221,7 +216,7 @@ namespace TextAdventure.Classes
             catch (Exception ex) { LogError(ex); }
         }
         public static void AddItemToFile(string item)
-        {
+        { // Add item to file via exact string.
             try
             {
                 string firstItem = "";
@@ -245,6 +240,19 @@ namespace TextAdventure.Classes
                 using (writer = new(RoomsFilePath, true))
                 {
                     writer.Write(firstRoom + room.Name + "," + room.Description + "," + room.DetailedDescription + "," + roomItemIds);
+                }
+            }
+            catch (Exception ex) { LogError(ex); }
+        }
+        public static void AddRoomToFile(string room)
+        { // Add room to file via exact string.
+            try
+            {
+                string firstRoom = "";
+                if (File.Exists(RoomsFilePath)) firstRoom = "\n";
+                using (writer = new(RoomsFilePath, true))
+                {
+                    writer.Write(firstRoom + room);
                 }
             }
             catch (Exception ex) { LogError(ex); }

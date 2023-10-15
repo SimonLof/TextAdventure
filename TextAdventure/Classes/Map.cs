@@ -16,7 +16,7 @@
             MapLayout.Add(room);
         }
         public bool RemoveRoom(Room room)
-        {
+        { // Kan användas när en bättre editor görs.
             int len = MapLayout.Count;
             MapLayout = MapLayout.Where(r => r.Name != room.Name).ToList();
             if (len != MapLayout.Count)
