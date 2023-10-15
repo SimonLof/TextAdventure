@@ -1,10 +1,10 @@
 ﻿namespace TextAdventure.Classes.EffectClasses
 {
-    public class WinTheGameEffect : Effect
+    public class LoseTheGameEffect : Effect
     {
-        public WinTheGameEffect()
+        public LoseTheGameEffect()
         {
-            Name = "win";
+            Name = "lose";
         }
 
         public override void DoEffect()
@@ -25,15 +25,16 @@
             Console.SetCursorPosition((Console.WindowWidth / 2) - outroText3.Length / 2, (Console.WindowHeight / 3) * 2);
             ScreenWriter.ConsoleWrite(outroText3, 200, true);
             Thread.Sleep(2000);
-            LightningEffect lightningEffect = new(2,100,ConsoleColor.DarkRed);
+            LightningEffect lightningEffect = new(2, 100, ConsoleColor.DarkRed);
             lightningEffect.DoEffect();
             Thread.Sleep(1000);
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.Clear();
             Thread.Sleep(2000);
-            string finalText1 = "Game Over!";
+            string finalText1 = "Game Over...";
             string finalText2 = "Press enter to quit.";
             Console.SetCursorPosition((Console.WindowWidth / 2) - finalText1.Length / 2, Console.WindowHeight / 3);
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Red;
             ScreenWriter.ConsoleWrite(finalText1, 10, true);
             Thread.Sleep(1000);
             Console.SetCursorPosition((Console.WindowWidth / 2) - finalText2.Length / 2, Console.WindowHeight / 2);

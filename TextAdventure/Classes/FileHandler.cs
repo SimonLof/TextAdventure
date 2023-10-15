@@ -7,7 +7,7 @@ namespace TextAdventure.Classes
         private static readonly string RoomsFilePath = ".\\rooms.txt";
         private static readonly string ItemsFilePath = ".\\items.txt";
         private static readonly string ErrorLogFilePath = ".\\errorlog.txt";
-        private static readonly string MapFilePath = ".\\map.txt"; // Save current map to continue playing? Later project
+        //private static readonly string MapFilePath = ".\\map.txt"; // Save current map to continue playing? Later project
         private static StreamReader? reader;
         private static StreamWriter? writer;
         public static List<Room> GetRooms()
@@ -45,6 +45,9 @@ namespace TextAdventure.Classes
                                             break;
                                         case "win":
                                             effects.Add(new WinTheGameEffect());
+                                            break;
+                                        case "lose":
+                                            effects.Add(new LoseTheGameEffect());
                                             break;
                                         case "add_item_inv":
                                             effects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
@@ -126,6 +129,9 @@ namespace TextAdventure.Classes
                                             case "win":
                                                 item.ItemEffects.Add(new WinTheGameEffect());
                                                 break;
+                                            case "lose":
+                                                item.ItemEffects.Add(new LoseTheGameEffect());
+                                                break;
                                             case "add_item_inv":
                                                 item.ItemEffects.Add(new AddItemToInventoryEffect(int.Parse(effectNameAndVariable[1])));
                                                 break;
@@ -189,11 +195,15 @@ namespace TextAdventure.Classes
                         {
                             effectString += effect.Name;
                             switch (effect.Name)
-                            { 
+                            {
                                 case "show_text":
                                     effectString += "$" + (effect as ShowTextEffect).Text;
                                     break;
                                 case "unlock":
+                                    break;
+                                case "win":
+                                    break;
+                                case "lose":
                                     break;
                                 case "add_item_inv":
                                     break;

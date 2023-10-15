@@ -7,9 +7,11 @@ internal class Program
     {
         bool running = true;
         #region Initial Stuff
+        Console.CursorVisible = false;
         running = StupidIntro(running);
         FancyIntro();
         ScreenWriter.ConsoleWrite("What is your name? ");
+        Console.CursorVisible = true;
         Player player = new(name: Console.ReadLine());
         ScreenWriter.ConsoleWriteLine("....", 250);
         Map map = GameSetUp();
@@ -64,6 +66,7 @@ internal class Program
         while (wargames.ToLower() != "y" && wargames.ToLower() != "yes")
         {
             ScreenWriter.ConsoleWrite("Shall we play a game? ");
+            Console.CursorVisible = true;
             wargames = Console.ReadLine();
             if (wargames.ToLower() is "gtw" or "global thermonuclear war")
             {
@@ -74,6 +77,7 @@ internal class Program
                 running = false;
                 break;
             }
+            Console.CursorVisible = false;
         }
 
         return running;
@@ -88,10 +92,10 @@ internal class Program
         string introText1 = "....What a horrible night....";
         string introText2 = "....To have a curse....";
         Console.SetCursorPosition((Console.WindowWidth / 2) - introText1.Length / 2, Console.WindowHeight / 3);
-        ScreenWriter.ConsoleWrite(introText1, 20);
-        Thread.Sleep(3000);
-        Console.SetCursorPosition((Console.WindowWidth / 2) - introText2.Length / 2, (Console.WindowHeight / 3) * 2);
-        ScreenWriter.ConsoleWrite(introText2, 40);
+        ScreenWriter.ConsoleWrite(introText1, 20, true);
+        Thread.Sleep(2000);
+        Console.SetCursorPosition((Console.WindowWidth / 2) - introText2.Length / 2, (Console.WindowHeight / 2));
+        ScreenWriter.ConsoleWrite(introText2, 40, true);
         Thread.Sleep(2000);
         LightningEffect lightningEffect = new();
         lightningEffect.DoEffect();
