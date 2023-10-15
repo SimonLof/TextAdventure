@@ -5,10 +5,13 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        if (args.Length != 0)
+            if (args[0] == "-c") { CreationMode.CreateStuff(); }
         bool running = true;
         #region Initial Stuff
         Console.CursorVisible = false;
         running = StupidIntro(running);
+        if (!running) { Environment.Exit(0); }
         FancyIntro();
         ScreenWriter.ConsoleWrite("What is your name? ");
         Console.CursorVisible = true;
