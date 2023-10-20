@@ -27,7 +27,7 @@ internal class Program
                    Item.GetItemFromId(itemInteractionTest.FirstItemId).Name + " and " +
                    Item.GetItemFromId(itemInteractionTest.SecondItemId).Name +
                    " into a fancy wizard outfit that starts moving around on its own!\n...\n" +
-                   "The outfit burts into flames and leaves behind a book on the floor.",20), //Använder namnet för att hitta namnet... Kanske borde köra på Id.
+                   "The outfit bursts into flames and leaves behind a book on the floor.",20),
             new RemoveItemFromInventoryEffect(itemInteractionTest.FirstItemId),
             new RemoveItemFromInventoryEffect(itemInteractionTest.SecondItemId),
             new AddItemToRoomEffect((Item.GetItemFromName("book")).Id)
