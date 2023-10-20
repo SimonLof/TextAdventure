@@ -6,36 +6,36 @@
         { // put this in its own class?
             Map map = new Map();
             string? userInput = "";
-            while (userInput != "q")
+            try
             {
-                FileHandler.GetAllItems();
-                Console.WriteLine("Add (r)oom or add (i)tem. Map will be generated from the rooms. Get (a)ll items and their index, for room construction. (q)uit.");
-                userInput = Console.ReadLine();
-                switch (userInput)
+                while (userInput != "q")
                 {
-                    case "r":
-                        AddRoom();
-                        break;
-                    case "i":
-                        AddItem();
-                        break;
-                    case "a":
-                        try
-                        {
+                    FileHandler.GetAllItems();
+                    Console.WriteLine("Add (r)oom or add (i)tem. Map will be generated from the rooms. Get (a)ll items and their index, for room construction. (q)uit.");
+                    userInput = Console.ReadLine();
+                    switch (userInput)
+                    {
+                        case "r":
+                            AddRoom();
+                            break;
+                        case "i":
+                            AddItem();
+                            break;
+                        case "a":
                             ListItems();
                             break;
-                        }
-                        catch { break; }
+                    }
+                    Item.ResetItemList();
                 }
-                Item.ResetItemList();
             }
+            catch (Exception ex) { FileHandler.LogError(ex, "Something went wrong in creation mode. Call the programmer."); }
             ScreenWriter.ConsoleWrite("Quitting creator mode");
             ScreenWriter.ConsoleWriteLine(".......", 250);
             Console.WriteLine("Restart the app to make sure added things get loaded correctly.");
         }
 
         private static void AddItem()
-        {
+        { // Do all of this in steps to make this all way easier.
             Console.WriteLine("\"<Name>,<Description>,<Detailed Description>,<effect_1_name>$<effect_1_variable>§" +
                 "<effect_2_name>$<effect_2_variable>$<effect_2_variable_list_var_1>@<effect2_variable_list_var_2>\" \n" +
                 "Id is automatic(check id after creation), item-interaction are its own thing. Notice difference between §, $ and @. " +
@@ -111,7 +111,7 @@
         }
 
         private static void AddRoom()
-        { // Effects not yet implemented in room maker.
+        { // Effects not yet implemented in room maker. Make all of this in steps, making creation MUCH easier for the user.
             Console.WriteLine("\"<Name>,<Description>,<Detailed Description>,<item1>§<item2>§<item3>,<effect_1_name>$<effect_1_var>§<effect_2_name>\"" +
                 "\nIf no items just type 999.");
             string? makeRoom = Console.ReadLine();
@@ -134,10 +134,13 @@
 
         private static void ListItems()
         {
+            try { 
             foreach (Item item in Item.GetAllItems())
             {
                 ScreenWriter.ConsoleWriteLine(item.Id + " : " + item.Name + " : " + item.Description, 0);
             }
+            }
+            catch (Exception ex) { FileHandler.LogError(ex); }
         }
     }
 }
