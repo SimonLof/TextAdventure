@@ -43,12 +43,12 @@ namespace TextAdventure.Classes
             }
             catch (Exception ex)
             {
-                LogError(ex, "Some rooms may be corrupted. Check rooms.txt for formatting errors. Delete the file if problem persists.");
+                LogError(ex, $"Some rooms may be corrupted. Check {RoomsFilePath} formatting errors. Delete the file if problem persists.");
             }
             return rooms;
         }
 
-        public static List<Item> GetAllItems()
+        public static List<Item> GetItems()
         {
             List<Item> items = new();
             try
@@ -63,7 +63,7 @@ namespace TextAdventure.Classes
                             Item item = new(itemProperties[0], itemProperties[1], itemProperties[2]);
                             if (itemProperties.Length > 3)
                             {
-                                string[] effectsFromFile = itemProperties[3].Split("§");
+                                string[] effectsFromFile = itemProperties[3].Split('§');
                                 item.ItemEffects = GetEffects(effectsFromFile);
                             }
                             items.Add(item);
@@ -73,14 +73,49 @@ namespace TextAdventure.Classes
                 else
                 { // Base item file creation
                     ItemFileInitializer();
-                    items = GetAllItems();
+                    items = GetItems();
                 }
             }
             catch (Exception ex)
             {
-                LogError(ex, "Some items may be corrupted. Check items.txt for formatting errors. Delete the file if problem persists.");
+                LogError(ex, $"Some items may be corrupted. Check {ItemsFilePath} for formatting errors. Delete the file if problem persists.");
             }
             return items;
+        }
+
+        public static List<ItemInteraction> GetInteractions()
+        {  // Reader done. Just make a file formatted correctly.
+            List<ItemInteraction> interactions = new();
+            try
+            {
+                if (File.Exists(InteractionFilePath))
+                {
+                    using (reader = new(InteractionFilePath))
+                    {
+                        while (!reader.EndOfStream)
+                        {
+                            string[] interactionProperties = reader.ReadLine().Split(',');
+                            ItemInteraction interaction = new(int.Parse(interactionProperties[1]), int.Parse(interactionProperties[2]));
+                            if (interactionProperties.Length > 3)
+                            {
+                                string[] effectsFromFile = interactionProperties[3].Split('§');
+                                interaction.CombineEffects = GetEffects(effectsFromFile);
+                            }
+                            interactions.Add(interaction);
+                        }
+                    }
+                }
+                else
+                {
+                    InteractionFileInitializer();
+                    interactions = GetInteractions();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Some item combinations may be corrupted. Check {InteractionFilePath} for formatting errors. Delete the file if problem persists.");
+            }
+            return interactions;
         }
         public static void AddItemToFile(Item item)
         { // StringFromEffects not yet fully implemented. Add items to file via string method for now.
@@ -109,7 +144,7 @@ namespace TextAdventure.Classes
             {
                 effectString += effect.Name;
                 switch (effect.Name)
-                {
+                { // Todo: all this
                     case "show_text":
                         effectString += "$" + ((ShowTextEffect)effect).Text + "$" + ((ShowTextEffect)effect).TextDelay;
                         break;
@@ -133,6 +168,24 @@ namespace TextAdventure.Classes
                 effectString += "§";
             }
             return effectString[..^1]; // remove the last §
+        }
+        public static void AddInteractionToFile(ItemInteraction interaction)
+        {
+            // not yet implemented.
+        }
+
+        public static void AddInteractionToFile(string interaction)
+        { // Add interaction to file via exact string.
+            try
+            {
+                string? firstInteraction = "";
+                if (File.Exists(ItemsFilePath)) firstInteraction = "\n";
+                using (writer = new(ItemsFilePath, true))
+                {
+                    writer.Write(firstInteraction + interaction);
+                }
+            }
+            catch (Exception ex) { LogError(ex); }
         }
 
         public static void AddItemToFile(string item)
@@ -162,7 +215,7 @@ namespace TextAdventure.Classes
                     string writeRoom = string.Empty;
                     writeRoom = ((firstRoom ? "" : "\n") + room.Name + "," + room.Description + "," + room.DetailedDescription + "," + roomItemIds);
                     if (room.EffectOnEnter.Count > 0)
-                    {
+                    { // string from effect not complete. Use exact string to add stuff.
                         writeRoom += StringFromEffects(room.EffectOnEnter);
                     }
                     writer.Write(writeRoom);
@@ -190,12 +243,12 @@ namespace TextAdventure.Classes
             {
                 using (writer = new(ErrorLogFilePath, true))
                 {
-                    writer.WriteLine(ex.ToString());
+                    writer.WriteLine(DateTime.Now + " " + ex.ToString());
                 }
             }
             catch
             {
-                Console.WriteLine(ex.ToString());
+                Console.WriteLine(DateTime.Now + " Something went wrong when writing to errorlog. Could not write error: " + ex.ToString());
             }
         }
         public static void LogError(Exception ex, string optionalMessage)
@@ -209,7 +262,7 @@ namespace TextAdventure.Classes
             }
             catch
             {
-                Console.WriteLine(DateTime.Now + " " + optionalMessage + "\n" + ex.ToString());
+                Console.WriteLine(DateTime.Now + " Something went wrong when writing to errorlog. Could not write error: " + optionalMessage + "\n" + ex.ToString());
             }
         }
         #endregion
@@ -225,6 +278,8 @@ namespace TextAdventure.Classes
                     case "show_text":
                         if (effectNameAndVariable.Length > 2)
                         {
+                            for (int j = 0; j < Item.GetAllItems().Count; j++)
+                                effectNameAndVariable[1] = effectNameAndVariable[1].Replace("{" + j + "}", Item.GetItemFromId(j).Name);
                             effects.Add(new ShowTextEffect(effectNameAndVariable[1], int.Parse(effectNameAndVariable[2])));
                         }
                         else { effects.Add(new ShowTextEffect(effectNameAndVariable[1])); }
@@ -291,6 +346,14 @@ namespace TextAdventure.Classes
                     "Kitchen,A small kitchen. Empty pots and pans everywhere.,You see some cockroaches who seem to be building a nest... strange.,4\r\n" +
                     "Living room,Very empty. A couch and a fireplace is all there is...,Everything is covered in dust... You swipe some dust off of the fireplace and find a small note that says \"A wizard wears a hat and robe in combination\".,7\r\n" +
                     "The End,Ending Room,Can't see this. You finish when you enter.,999,show_text$This is the end.......$200§win");
+            }
+        }
+
+        public static void InteractionFileInitializer()
+        {
+            using (writer = new(InteractionFilePath, false))
+            {
+                writer.Write("Magic Wizard,6,3,show_text$You combined {6} and {3} into a fancy wizard outfit that starts moving around on its own!$20§show_text$.....$250§show_text$The outfit bursts into flames and leaves behind a book on the floor.$20§remove_item_inv$6§remove_item_inv$3§add_item_room$2");
             }
         }
         #endregion

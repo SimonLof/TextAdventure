@@ -10,7 +10,7 @@
             {
                 while (userInput != "q")
                 {
-                    FileHandler.GetAllItems();
+                    FileHandler.GetItems();
                     Console.WriteLine("Add (r)oom or add (i)tem. Map will be generated from the rooms. Get (a)ll items and their index, for room construction. (q)uit.");
                     userInput = Console.ReadLine();
                     switch (userInput)
