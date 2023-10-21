@@ -25,18 +25,19 @@ internal class Program
         Map map = GameSetUp();
         /////////////////////////// Test
         // Make combine effect file and load this with filehandler instead.
-        ItemInteraction itemInteractionTest = new(6, 3);
-        itemInteractionTest.CombineEffects = new List<Effect>()
-        {
-            new ShowTextEffect("You combined " +
-                   Item.GetItemFromId(itemInteractionTest.FirstItemId).Name + " and " +
-                   Item.GetItemFromId(itemInteractionTest.SecondItemId).Name +
-                   " into a fancy wizard outfit that starts moving around on its own!\n...\n" +
-                   "The outfit bursts into flames and leaves behind a book on the floor.",20),
-            new RemoveItemFromInventoryEffect(itemInteractionTest.FirstItemId),
-            new RemoveItemFromInventoryEffect(itemInteractionTest.SecondItemId),
-            new AddItemToRoomEffect((Item.GetItemFromName("book")).Id)
-        };
+        FileHandler.GetInteractions();
+        //ItemInteraction itemInteractionTest = new(6, 3);
+        //itemInteractionTest.CombineEffects = new List<Effect>()
+        //{
+        //    new ShowTextEffect("You combined " +
+        //           Item.GetItemFromId(itemInteractionTest.FirstItemId).Name + " and " +
+        //           Item.GetItemFromId(itemInteractionTest.SecondItemId).Name +
+        //           " into a fancy wizard outfit that starts moving around on its own!\n...\n" +
+        //           "The outfit bursts into flames and leaves behind a book on the floor.",20),
+        //    new RemoveItemFromInventoryEffect(itemInteractionTest.FirstItemId),
+        //    new RemoveItemFromInventoryEffect(itemInteractionTest.SecondItemId),
+        //    new AddItemToRoomEffect((Item.GetItemFromName("book")).Id)
+        //};
         /////////////////////////// End test
         Console.Clear();
         bool firstLook = true;
@@ -135,7 +136,7 @@ internal class Program
             map.AddRoom(room);
         }
         map.CurrentRoom = map.MapLayout[0];
-        FileHandler.GetAllItems();
+        FileHandler.GetItems();
         return map;
     }
     private static Facing InvertFacing(Facing facing)
