@@ -13,9 +13,14 @@ internal class Program
         running = StupidIntro(running);
         if (!running) { Environment.Exit(0); }
         FancyIntro();
-        ScreenWriter.ConsoleWrite("What is your name? ");
         Console.CursorVisible = true;
-        Player player = new(name: Console.ReadLine());
+        string name = string.Empty;
+        do
+        {
+            ScreenWriter.ConsoleWrite("What is your name? ");
+            name = Console.ReadLine();
+        } while (name.Trim().Length < 1);
+        Player player = new(name);
         ScreenWriter.ConsoleWriteLine("....", 250);
         Map map = GameSetUp();
         /////////////////////////// Test
