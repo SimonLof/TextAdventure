@@ -35,7 +35,7 @@
         }
 
         private static void AddItem()
-        { // Do all of this in steps to make this all way easier.
+        { // Do all of this in steps to make it userfriendly.
             Console.WriteLine("\"<Name>,<Description>,<Detailed Description>,<effect_1_name>$<effect_1_variable>§" +
                 "<effect_2_name>$<effect_2_variable>$<effect_2_variable_list_var_1>@<effect2_variable_list_var_2>\" \n" +
                 "Id is automatic(check id after creation), item-interaction are its own thing. Notice difference between §, $ and @. " +

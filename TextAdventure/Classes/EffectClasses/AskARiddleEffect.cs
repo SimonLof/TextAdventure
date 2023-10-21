@@ -22,6 +22,7 @@
 
         public override void DoEffect()
         {
+            try {
             Riddle = Riddle.Replace("{P}", Player.ThePlayer.Name); // Make a string manipulator class that can replace markers in files with variables.
             RiddleRewardString = RiddleRewardString.Replace("{P}", Player.ThePlayer.Name);
             ScreenWriter.ConsoleWrite(Riddle, 20);
@@ -52,7 +53,11 @@
             }
             else
                 ScreenWriter.ConsoleWriteLine("Can't use that.");
-
+            }
+            catch (Exception ex)
+            {
+                FileHandler.LogError(ex);
+            }
         }
     }
 }
