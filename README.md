@@ -1,6 +1,8 @@
 # TextAdventure
 Text Adventure console game for final assignment in first course of .NET C# programming @Nackademin.
 
+Small flashing lights warning. Play in fullscreen (press F11) for best experience.
+
 Game works with some fancy features. Answer "y" or "yes" to first question to play.
 
 Using Jorts will win the game, so if you want to see everything, leave the jorts behind.
