@@ -2,10 +2,9 @@
 {
     public class Map
     {
+        public static Map? TheMap { get; set; }
         public List<Room> MapLayout { get; set; }
-        public Room CurrentRoom { get; set; }
-        public static Map TheMap { get; set; }
-
+        public Room? CurrentRoom { get; set; }
         public Map()
         {
             MapLayout = new List<Room>();

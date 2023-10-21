@@ -3,7 +3,7 @@
     public static class ScreenWriter
     {
         public static void ConsoleWriteLine(string text, int delay = 10, bool noCursorMode = false)
-        {
+        { // varför har jag gjort double negative....
             Console.CursorVisible = false;
             foreach (Char c in text)
             {

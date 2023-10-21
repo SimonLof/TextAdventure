@@ -10,7 +10,14 @@
         }
         public override void DoEffect()
         {
-            Map.TheMap.CurrentRoom.ItemsById.Remove(ItemToRemove);
+            try
+            {
+                Map.TheMap.CurrentRoom.ItemsById.Remove(ItemToRemove);
+            }
+            catch (Exception ex)
+            {
+                FileHandler.LogError(ex, "Remove item from room effect error.");
+            }
         }
     }
 }
