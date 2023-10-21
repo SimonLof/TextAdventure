@@ -12,7 +12,14 @@
 
         public override void DoEffect()
         {
-            Map.TheMap.CurrentRoom.ItemsById.Add(ItemToAdd);
+            try
+            {
+                Map.TheMap.CurrentRoom.ItemsById.Add(ItemToAdd);
+            }
+            catch (Exception ex)
+            {
+                FileHandler.LogError(ex, "Adding item to room effect error.");
+            }
         }
     }
 }

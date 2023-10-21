@@ -17,7 +17,7 @@
             }
             catch (Exception ex)
             {
-                FileHandler.LogError(ex);
+                FileHandler.LogError(ex, "Remove item from inventory effect error.");
             }
         }
     }

@@ -103,7 +103,7 @@ namespace TextAdventure.Classes
         }
 
         private static string StringFromEffects(List<Effect> effects)
-        { // Go through all effects and add correct string
+        { // Go through all effects and add correct string. Not complete.
             string? effectString = ",";
             foreach (Effect effect in effects)
             {
