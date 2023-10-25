@@ -1,0 +1,12 @@
+{
+    "launch": {
+        "configurations": [],
+        "compounds": []
+    },
+    "terminal.explorerKind": "external",
+    "terminal.integrated.automationProfile.linux": {},
+    "terminal.integrated.automationProfile.windows": {
+        "overrideName": true
+    },
+    "csharp.debug.console": "externalTerminal"
+}
