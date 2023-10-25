@@ -58,16 +58,16 @@ internal class Program
     private static bool StupidIntro(bool running)
     {
         string wargames = string.Empty;
-        while (wargames.ToLower() != "y" && wargames.ToLower() != "yes")
+        while (wargames != "y" && wargames != "yes")
         {
             ScreenWriter.ConsoleWrite("Shall we play a game? ");
             Console.CursorVisible = true;
-            wargames = Console.ReadLine();
-            if (wargames.ToLower() is "gtw" or "global thermonuclear war")
+            wargames = Console.ReadLine().ToLower().Trim();
+            if (wargames is "gtw" or "global thermonuclear war")
             {
                 CreationMode.CreateStuff();
             }
-            else if (wargames.ToLower() is "no" or "n")
+            else if (wargames is "no" or "n")
             {
                 running = false;
                 break;
@@ -104,7 +104,7 @@ internal class Program
         Random random = new(Environment.TickCount);
         List<Room> rooms = FileHandler.GetRooms();
         Facing previousRoom = Facing.South;
-        rooms[0].AddDoors(new() { new(previousRoom, rooms[1]) });
+        rooms[0].AddDoors(new List<Door>() { new Door(previousRoom, rooms[1]) });
         for (int i = 1; i < rooms.Count - 1; i++)
         {
             Facing excludedDirection = InvertFacing(previousRoom);
