@@ -24,9 +24,10 @@ namespace TextAdventure.Classes
                         ScreenWriter.ConsoleWriteLine(player.Name);
                         break;
                     case "help" or "h":
-                        ScreenWriter.ConsoleWriteLine("'Look' at the room your are in. 'Go <direction>' to go somewhere. 'get <item>' to pick up stuff.\n" +
-                                                      "'inv' to look at your inventory. 'inspect <most things>' to take a closer look at something.\n" +
-                                                      "'use <item>' to use an item. 'use <item> on <item>' to combine stuff. 'q' to quit.", 0);
+                        ScreenWriter.ConsoleWriteLine(
+                            "'Look' at the room your are in. 'Go <direction>' to go somewhere. 'get <item>' to pick up stuff.\n" +
+                            "'inv' to look at your inventory. 'inspect <most things>' to take a closer look at something.\n" +
+                            "'use <item>' to use an item. 'use <item> on <item>' to combine stuff. 'q' to quit.", 0);
                         break;
                     case "use" or "u":
                         UseItem(player, inputCommands, numberOfCommands);
@@ -55,8 +56,8 @@ namespace TextAdventure.Classes
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 if (ex.Message != "I don't know what you mean by that... See list of commands with 'help'.") { FileHandler.LogError(ex); }
+                else { Console.WriteLine(ex.Message); }
             }
         }
 
@@ -105,7 +106,7 @@ namespace TextAdventure.Classes
                         {
                             try
                             {
-                                if (inputCommands[2].ToLower() is "on" or "with")
+                                if (inputCommands[2].ToLower() is "on" or "with" or "and")
                                 {
                                     if (inputCommands.Count > 3)
                                     {
@@ -162,13 +163,12 @@ namespace TextAdventure.Classes
                                     foreach (Effect effect in item.ItemEffects)
                                     {
                                         effect.DoEffect();
-                                        if (effect is AskARiddleEffect)
-                                        {
-                                            if (((AskARiddleEffect)effect).Correct && ((AskARiddleEffect)effect).DestroyItemAfterCorrect)
-                                            {
-                                                RemoveItemFromInventoryEffect removeItem = new(item.Id);
-                                                removeItem.DoEffect();
-                                            }
+                                        if (effect is AskARiddleEffect riddleEffect)
+                                        { // integrate this in riddle effect somehow.
+                                          // Effects could be aware of what object they are a part of.
+                                          // Or remove this since all it does is use another effect, and make the creator add a new remove effect after.
+                                          // But make remove effects conditional? Maybe all effects should have a condition?
+                                            riddleEffect.DestroyAfterCorrect(item);
                                         }
                                     }
                                 }
@@ -251,7 +251,7 @@ namespace TextAdventure.Classes
                                     facing = Facing.West;
                                     break;
                                 default:
-                                    lookingAt = new Item("Which door?", "", "'North' 'South' 'East' 'West'");
+                                    lookingAt = new Item("Which door?", "", "'North' 'South' 'East' 'West'"); // Hacky solution, maybe remake
                                     break;
                             }
                             if (facing != null)
@@ -259,7 +259,7 @@ namespace TextAdventure.Classes
                                 lookingAt = map.CurrentRoom.Doors.SingleOrDefault(d =>
                                 d.Name.ToLower() == inputCommands[1].ToLower() &&
                                 d.Direction == facing);
-                                if (lookingAt == null) { lookingAt = new Item("No door in that direction.", "", "Use 'look' to see avaliable doors."); }
+                                if (lookingAt == null) { lookingAt = new Item("No door in that direction.", "", "Use 'look' to see available doors."); }
                             }
                         }
                     }

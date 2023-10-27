@@ -22,37 +22,54 @@
 
         public override void DoEffect()
         {
-            try {
-            Riddle = Riddle.Replace("{P}", Player.ThePlayer.Name); // Make a string manipulator class that can replace markers in files with variables.
-            RiddleRewardString = RiddleRewardString.Replace("{P}", Player.ThePlayer.Name);
-            ScreenWriter.ConsoleWrite(Riddle, 20);
-            string userAnswer = Console.ReadLine();
-            if (Usable)
+            try
             {
-                foreach (var answer in Answers)
+                Riddle = Riddle.Replace("{P}", Player.ThePlayer.Name); // Make a string manipulator class that can replace markers in files with variables.
+                RiddleRewardString = RiddleRewardString.Replace("{P}", Player.ThePlayer.Name);
+                ScreenWriter.ConsoleWrite(Riddle, 20);
+                string userAnswer = Console.ReadLine();
+                if (Usable)
                 {
-                    if (answer.ToLower() == userAnswer.ToLower())
+                    foreach (var answer in Answers)
                     {
-                        Correct = true;
+                        if (answer.ToLower() == userAnswer.ToLower())
+                        {
+                            Correct = true;
+                        }
                     }
-                }
-                if (Correct)
-                {
-                    if (ItemRewardId != 999)
+                    if (Correct)
                     {
-                        ScreenWriter.ConsoleWriteLine("...You are rewarded with " + Item.GetItemFromId(ItemRewardId).Name + "!");
-                        AddItemToInventoryEffect addItemToInventoryEffect = new(ItemRewardId);
-                        addItemToInventoryEffect.DoEffect();
+                        if (ItemRewardId != 999)
+                        {
+                            ScreenWriter.ConsoleWriteLine("...You are rewarded with " + Item.GetItemFromId(ItemRewardId).Name + "!");
+                            AddItemToInventoryEffect addItemToInventoryEffect = new(ItemRewardId);
+                            addItemToInventoryEffect.DoEffect();
+                        }
+                        ScreenWriter.ConsoleWriteLine(RiddleRewardString);
                     }
-                    ScreenWriter.ConsoleWriteLine(RiddleRewardString);
+                    else
+                    {
+                        ScreenWriter.ConsoleWriteLine("Incorrect!");
+                    }
                 }
                 else
-                {
-                    ScreenWriter.ConsoleWriteLine("Incorrect!");
-                }
+                    ScreenWriter.ConsoleWriteLine("Can't use that.");
             }
-            else
-                ScreenWriter.ConsoleWriteLine("Can't use that.");
+            catch (Exception ex)
+            {
+                FileHandler.LogError(ex);
+            }
+        }
+
+        public void DestroyAfterCorrect(Item item)
+        {
+            try
+            {
+                if (Correct && DestroyItemAfterCorrect)
+                {
+                    RemoveItemFromInventoryEffect removeThisItem = new(item.Id);
+                    removeThisItem.DoEffect();
+                }
             }
             catch (Exception ex)
             {
