@@ -74,7 +74,6 @@ internal class Program
             }
             Console.CursorVisible = false;
         }
-
         return running;
     }
 

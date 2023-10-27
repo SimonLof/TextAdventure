@@ -281,6 +281,27 @@ namespace TextAdventure.Classes
                 }
                 else
                 {
+                    if (lookingAt is Player)
+                    {
+                        List<(Note, int)> songNotes = new()
+                        {
+                            (Note.C, 500),
+                            (Note.D, 500),
+                            (Note.E, 900),
+                            (Note.C, 500),
+                            (Note.D, 500),
+                            (Note.E, 900),
+                            (Note.Silent, 50),
+                            (Note.D, 500),
+                            (Note.D, 500),
+                            (Note.D, 500),
+                            (Note.D, 500),
+                            (Note.C, 900),
+                            (Note.C, 900),
+                        };
+                        Song hotDogSong = new(songNotes);
+                        hotDogSong.PlaySong();
+                    }
                     ScreenWriter.ConsoleWriteLine($"{lookingAt.Name[0..1].ToUpper()}{lookingAt.Name[1..]} - {lookingAt.DetailedDescription}");
                     if (lookingAt.Name.ToLower() == "door")
                     {
