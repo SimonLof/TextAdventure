@@ -17,7 +17,7 @@
         }
 
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
-        public override void DoEffect()
+        public override async void DoEffect()
         {
             Console.Beep(Frequency, Duration);
         }
