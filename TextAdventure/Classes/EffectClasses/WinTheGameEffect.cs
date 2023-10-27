@@ -41,10 +41,7 @@
             Thread.Sleep(1000);
             Console.SetCursorPosition((Console.WindowWidth / 2) - finalText2.Length / 2, Console.WindowHeight / 2);
             ScreenWriter.ConsoleWrite(finalText2, 10, true);
-            Task.Run(() =>
-            { // First attempt at threading. Seems to be reasonable here. 1 extra background thread that plays everything.
-                Song.PlayMario();
-            });
+            Song.PlayMario();
             Console.ReadLine();
             Environment.Exit(0);
         }

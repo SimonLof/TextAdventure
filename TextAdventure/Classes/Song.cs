@@ -12,14 +12,19 @@
             MySong = song;
         }
 
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public void PlaySong()
         {
-            for (int i = 0; i < MySong.Count; i++)
+            Task.Run(() =>
             {
-                PlayNote.Play(MySong[i].Item1, MySong[i].Item2);
-            }
+                for (int i = 0; i < MySong.Count; i++)
+                {
+                    PlayNote.Play(MySong[i].Item1, MySong[i].Item2);
+                }
+            });
         }
 
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static void PlayMario()
         {
             List<(Note, int)> songNotes = new()
