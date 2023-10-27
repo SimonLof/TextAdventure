@@ -9,7 +9,7 @@
 
         // Göra lite basmetoder / enums för skalor eller vissa ljud så att det är enklare att använda ljudeffekten.
 
-        public SoundEffect(int frequency = 200, int duration = 500)
+        public SoundEffect(int frequency = 200, int duration = 800)
         { //Not yet implemented.
             Name = "beep";
             Frequency = frequency;
@@ -17,7 +17,7 @@
         }
 
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
-        public override void DoEffect()
+        public override async void DoEffect()
         {
             Console.Beep(Frequency, Duration);
         }

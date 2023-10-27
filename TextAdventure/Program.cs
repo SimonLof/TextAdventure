@@ -72,6 +72,11 @@ internal class Program
                 running = false;
                 break;
             }
+            else if(wargames is "iliketofart")
+            {
+                WinTheGameEffect cheating = new WinTheGameEffect();
+                cheating.DoEffect();
+            }
             Console.CursorVisible = false;
         }
         return running;
