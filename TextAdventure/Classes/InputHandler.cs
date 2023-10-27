@@ -238,16 +238,16 @@ namespace TextAdventure.Classes
                             Facing? facing = null;
                             switch (inputCommands[2].ToLower())
                             {
-                                case "north":
+                                case "north" or "n":
                                     facing = Facing.North;
                                     break;
-                                case "south":
+                                case "south" or "s":
                                     facing = Facing.South;
                                     break;
-                                case "east":
+                                case "east" or "e":
                                     facing = Facing.East;
                                     break;
-                                case "west":
+                                case "west" or "w":
                                     facing = Facing.West;
                                     break;
                                 default:
@@ -285,19 +285,19 @@ namespace TextAdventure.Classes
                     {
                         List<(Note, int)> songNotes = new()
                         {
-                            (Note.C, 500),
-                            (Note.D, 500),
-                            (Note.E, 900),
-                            (Note.C, 500),
-                            (Note.D, 500),
-                            (Note.E, 900),
-                            (Note.Silent, 50),
-                            (Note.D, 500),
-                            (Note.D, 500),
-                            (Note.D, 500),
-                            (Note.D, 500),
-                            (Note.C, 900),
-                            (Note.C, 900),
+                            (Note.c4 , 400),
+                            (Note.d4 , 400),
+                            (Note.e4, 800),
+                            (Note.c4, 400),
+                            (Note.d4, 400),
+                            (Note.e4, 800),
+                            (Note.Silent, 100),
+                            (Note.d4, 400),
+                            (Note.d4, 400),
+                            (Note.d4, 400),
+                            (Note.d4, 400),
+                            (Note.c4, 800),
+                            (Note.c4, 800),
                         };
                         Song hotDogSong = new(songNotes);
                         hotDogSong.PlaySong();
@@ -351,16 +351,16 @@ namespace TextAdventure.Classes
             {
                 switch (inputCommands[1].ToLower())
                 {
-                    case "north":
+                    case "north" or "n":
                         LookForTheDoor(map, Facing.North);
                         break;
-                    case "east":
+                    case "east" or "e":
                         LookForTheDoor(map, Facing.East);
                         break;
-                    case "south":
+                    case "south" or "s":
                         LookForTheDoor(map, Facing.South);
                         break;
-                    case "west":
+                    case "west" or "w":
                         LookForTheDoor(map, Facing.West);
                         break;
                     default:

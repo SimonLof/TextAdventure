@@ -27,11 +27,11 @@
             ScreenWriter.ConsoleWrite(outroText3, 200, true);
             Thread.Sleep(2000);
 
-            LightningEffect lightningEffect = new(2,100,ConsoleColor.DarkRed);
+            LightningEffect lightningEffect = new(2, 100, ConsoleColor.DarkRed);
             lightningEffect.DoEffect();
             Thread.Sleep(1000);
             Console.Clear();
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
 
             string finalText1 = "Game Over!";
             string finalText2 = "Press enter to quit.";
@@ -41,6 +41,10 @@
             Thread.Sleep(1000);
             Console.SetCursorPosition((Console.WindowWidth / 2) - finalText2.Length / 2, Console.WindowHeight / 2);
             ScreenWriter.ConsoleWrite(finalText2, 10, true);
+            Task.Run(() =>
+            { // First attempt at threading. Seems to be reasonable here. 1 extra background thread that plays everything.
+                Song.PlayMario();
+            });
             Console.ReadLine();
             Environment.Exit(0);
         }
