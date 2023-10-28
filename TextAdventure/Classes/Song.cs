@@ -29,6 +29,7 @@
         {
             List<(Note, int)> songNotes = new()
             {
+                (Note.Silent,1600),
                 (Note.e5,400),(Note.e5,400),(Note.e5,400),(Note.c5,400),(Note.e5,400),(Note.g5,400),(Note.g4,400),
                 (Note.c5,400),(Note.g4,400),(Note.e4,400),(Note.a4,400),(Note.b4,400),(Note.bb4,400),(Note.a4,400),
                 (Note.g4,400),(Note.e5,400),(Note.g5,400),(Note.a5,400),(Note.f5,400),(Note.g5,400),(Note.e5,400),
