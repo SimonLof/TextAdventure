@@ -1,6 +1,7 @@
 # TextAdventure
 Text Adventure console game for final assignment in first course of .NET C# programming @Nackademin.
 
+Lower the volume to like 10%.
 Small flashing lights warning. Play in fullscreen (press F11) for best experience.
 
 The game is very short, the point is more to show off some of the effects in the effect class. (And hopefully to be somewhat entertaining)
